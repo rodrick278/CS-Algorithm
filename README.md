@@ -4,4 +4,5 @@
 
 📐 算法与数据结构
 
-## [Leetcode 题解](./Leetcode 题解/Leetcode 题解 - 目录.md)
+## [Leetcode 题解](Leetcode 题解/Leetcode 题解 - 目录.md)
+
