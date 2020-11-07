@@ -1,4 +1,4 @@
-* [1. 两数之和 II - 输入有序数组](#1.%20两数之和%20II%20-%20输入有序数组(eazy))
+* [1. 两数之和 II - 输入有序数组](#1-两数之和-输入有序数组)
 
   
 
@@ -6,65 +6,43 @@
 
 指的是在遍历对象的过程中，不是普通的使用单个指针进行访问，而是使用两个相同方向（*快慢指针*）或者相反方向（*对撞指针*）的指针进行扫描，从而达到相应的目的。
 
+a
 
+a
 
+a
 
+a
 
+a
 
+a
 
+a
 
+a
 
+a
 
+a
 
+a
 
+a
 
+a
 
+a
 
+a
 
+a
 
+a
 
+##  1. 两数之和  输入有序数组
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-##  1. 两数之和 II - 输入有序数组(eazy)
-
-[LeetCode](https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/)
+[167. 两数之和 II - 输入有序数组](https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/)
 
 **题目:**
 
