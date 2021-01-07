@@ -1,5 +1,9 @@
 * [1. 两数之和  输入有序数组](#1-两数之和-输入有序数组)
 
+* [2. 平方数之和](#2-平方数之和)
+
+* [3. 反转字符串中的元音字母](#3-反转字符串中的元音字母)
+
   
 
 # 双指针 Two Pointers
@@ -12,18 +16,18 @@
 
 [167. 两数之和 II - 输入有序数组](https://leetcode-cn.com/problems/two-sum-ii-input-array-is-sorted/)
 
-**题目:**
+**题目：**
 
 给定一个已按照_升序排列_ 的有序数组，找到两个数使得它们相加之和等于目标数。
 
 函数应该返回这两个下标值 index1 和 index2，其中 index1 必须小于 index2。
 
-**说明:**
+**说明：**
 
 - 返回的下标值（index1 和 index2）不是从零开始的。
 - 你可以假设每个输入只对应唯一的答案，而且你不可以重复使用相同的元素。
 
-示例:
+**示例：**
 
 ```
 输入: numbers = [2, 7, 11, 15], target = 9
@@ -31,7 +35,158 @@
 解释: 2 与 7 之和等于目标数 9 。因此 index1 = 1, index2 = 2 
 ```
 
-**题解:**
+**题解：**
 
+```js
+/*
+ * @lc app=leetcode.cn id=167 lang=javascript
+ *
+ * [167] 两数之和 II - 输入有序数组
+ */
 
+// @lc code=start
+/**
+ * @param {number[]} numbers
+ * @param {number} target
+ * @return {number[]}
+ */
+var twoSum = function (numbers, target) {
+  let len = numbers.length;
+  if (len < 2) return []
+  let left = 0
+  let right = len - 1
+  while (left < right) {
+    if (numbers[left] + numbers[right] === target) {
+      return [left + 1, right + 1]
+    } else if (numbers[left] + numbers[right] < target) {
+      left++
+    } else {
+      right--
+    }
+  }
+  return []
+};
+```
+
+## 2. 平方数之和
+
+ [633. 平方数之和](https://leetcode-cn.com/problems/sum-of-square-numbers/)
+
+**题目:**
+
+给定一个非负整数 `c` ，你要判断是否存在两个整数 `a` 和 `b`，使得 `a2 + b2 = c` 。
+
+**说明:**
+
+无
+
+**示例 1：**
+
+```
+输入：c = 5
+输出：true
+解释：1 * 1 + 2 * 2 = 5
+```
+
+**示例 2：**
+
+```
+输入：c = 3
+输出：false
+```
+
+**题解：**
+
+```js
+/*
+ * @lc app=leetcode.cn id=633 lang=javascript
+ *
+ * [633] 平方数之和
+ */
+
+// @lc code=start
+/**
+ * @param {number} c
+ * @return {boolean}
+ */
+var judgeSquareSum = function(c) {
+  let left=0
+  let right = Math.floor(Math.sqrt(c))
+  while(left<=right){
+    if(left**2+right**2===c){
+      return true
+    }else if(left**2+right**2<c){
+      left++
+    }else{
+      right--
+    }
+  }
+  return false
+};
+```
+
+## 3. 反转字符串中的元音字母
+
+[345. 反转字符串中的元音字母](https://leetcode-cn.com/problems/reverse-vowels-of-a-string/)
+
+**题目:**
+
+编写一个函数，以字符串作为输入，反转该字符串中的元音字母。
+
+**说明:**
+
+- 元音字母不包含字母 "y" 。
+- 题目没准确说明谁和谁转换，实际上应该是每次的最左和最右转换
+
+**示例 1：**
+
+```
+输入："hello"
+输出："holle"
+```
+
+**示例 2：**
+
+```
+输入："leetcode"
+输出："leotcede"
+```
+
+**题解：**
+
+```js
+/*
+ * @lc app=leetcode.cn id=345 lang=javascript
+ *
+ * [345] 反转字符串中的元音字母
+ */
+
+// @lc code=start
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var reverseVowels = function (s) {
+  const arr = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'];
+  let str = s.split('')
+  let left = 0
+  let right = str.length - 1
+
+  while (left < right) {
+    if (arr.includes(str[left])) {
+      if (arr.includes(str[right])) {
+        // 左右都找到了，替换后左右分别++ --
+        [str[left], str[right]] = [str[right], str[left]]
+        left++
+      }
+      // 右边不管找没找到，都需要--，所以不用放在 else 里
+      right--
+    } else {
+      // 左边没找到 ++
+      left++
+    }
+  }
+  return str.join('')
+};
+```
 
