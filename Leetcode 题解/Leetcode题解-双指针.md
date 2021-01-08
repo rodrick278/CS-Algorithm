@@ -4,6 +4,8 @@
 
 * [3. 反转字符串中的元音字母](#3-反转字符串中的元音字母)
 
+* [4. 回文字符串⭐](#4-回文字符串⭐)
+
   
 
 # 双指针 Two Pointers
@@ -188,5 +190,75 @@ var reverseVowels = function (s) {
   }
   return str.join('')
 };
+```
+
+## 4. 回文字符串⭐
+
+[680. 验证回文字符串 Ⅱ](https://leetcode-cn.com/problems/valid-palindrome-ii/)
+
+**题目:**
+
+给定一个非空字符串 `s`，**最多**删除一个字符。判断是否能成为回文字符串。
+
+**说明:**
+
+- 字符串只包含从 a-z 的小写字母。字符串的最大长度是50000。
+
+**示例 1:**
+
+```
+输入: "aba"
+输出: True
+```
+
+**示例 2:**
+
+```
+输入: "abca"
+输出: True
+解释: 你可以删除c字符。
+```
+
+**题解：**
+
+```js
+/*
+ * @lc app=leetcode.cn id=680 lang=javascript
+ *
+ * [680] 验证回文字符串 Ⅱ
+ */
+
+// @lc code=start
+/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var validPalindrome = function (s) {
+  let left = 0
+  let right = s.length - 1
+
+  while (left < right) {
+    if (s[left] === s[right]) {// 左右相等 分别向中间靠近一位
+      left++
+      right--
+    } else {// 左右不等，删除左边是回文或者删除右边是回文即为 true 否则为 false
+      return isHW(s, left + 1, right) || isHW(s, left, right - 1)
+    }
+  }
+  return true
+};
+
+// 验证删除后的字符串是否回文，不回文则整个算法结束false，回文则结束ture
+function isHW(s, left, right) {
+  while (left < right) {
+    if (s[left] === s[right]) {
+      left++
+      right--
+    } else {
+      return false
+    }
+  }
+  return true
+}
 ```
 
