@@ -334,30 +334,27 @@ nums2 = [2,5,6],       n = 3
     let len1 = m - 1
     let len2 = n - 1
     let len = m + n - 1
-    // 分别比较实际末位 nums1[len1] & nums2[len2]，取大的值填入 nums1 当前最后位(len) 然后大值数组向前退位
-    // 直到 nums2 剩下的值都比 nums1 小【因为大的值都扔进 nums1 后面了】
+    // 分别比较实际末位 m&n，取大的值填入 nums1 然后大值数组向前退位
+    // 直到 nums2 剩下的值都比 nums1 小【因为大的值都扔进 nums1 了】
+    // 都是先计算 再 -1
     while (len1 >= 0 && len2 >= 0) {
       if (nums1[len1] > nums2[len2]) {
-        nums1[len] = nums1[len1]
-        len1--
+        nums1[len--] = nums1[len1--]
       } else {
-        nums1[len] = nums2[len2]
-        len2--
+        nums1[len--] = nums2[len2--]
       }
-      len--
     }
     // 将 nums2 剩余的小值从前面塞进 nums1
     // 不用担心覆盖 nums1 前面的值，因为那些值都在后面了
     nums1.splice(0, len2 + 1, ...nums2.slice(0, len2 + 1))
-  
   };
   ```
-
+  
   上述算法步骤解释：
-
-  ```
+  
+```
   输入:
-  [3,5,0,0,0] m = 2
+[3,5,0,0,0] m = 2
   [1,2,6]			n = 3
   
   步骤[*代表当前指向]：
@@ -383,5 +380,5 @@ nums2 = [2,5,6],       n = 3
   =>
     END.
   ```
-
+  
   
