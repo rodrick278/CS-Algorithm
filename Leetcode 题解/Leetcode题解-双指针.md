@@ -6,6 +6,8 @@
 
 * [4. 回文字符串⭐](#4-回文字符串)
 
+* [5. 合并两个有序数组⭐](#5-合并两个有序数组)
+
   
 
 # 双指针 Two Pointers
@@ -262,3 +264,124 @@ function isHW(s, left, right) {
 }
 ```
 
+## 5. 合并两个有序数组⭐
+
+[88. 合并两个有序数组](https://leetcode-cn.com/problems/merge-sorted-array/)
+
+**题目:**
+
+给你两个有序整数数组 *nums1* 和 *nums2*，请你将 *nums2* 合并到 *nums1* 中*，*使 *nums1* 成为一个有序数组。
+
+**说明:**
+
+- 初始化 nums1 和 nums2 的元素数量分别为 m 和 n 。
+- 你可以假设 nums1 有足够的空间（空间大小大于或等于 m + n）来保存 nums2 中的元素。
+- Do not return anything, modify nums1 in-place instead.
+
+**示例：**
+
+```
+输入：
+nums1 = [1,2,3,0,0,0], m = 3
+nums2 = [2,5,6],       n = 3
+
+输出：[1,2,2,3,5,6]
+```
+
+**题解：**
+
+- 纯 ES6 数组操作
+
+  ```js
+  /*
+   * @lc app=leetcode.cn id=88 lang=javascript
+   *
+   * [88] 合并两个有序数组
+   */
+  
+  // @lc code=start
+  /**
+   * @param {number[]} nums1
+   * @param {number} m
+   * @param {number[]} nums2
+   * @param {number} n
+   * @return {void} Do not return anything, modify nums1 in-place instead.
+   */
+  var merge = function (nums1, m, nums2, n) {
+    let arr = [...nums1.slice(0, m), ...nums2.slice(0, n)].sort((a, b) => a > b ? 1 : -1)
+    nums1.splice(0, nums1.length, ...arr)
+  };
+  ```
+
+- 双指针
+
+  ```js
+  /*
+   * @lc app=leetcode.cn id=88 lang=javascript
+   *
+   * [88] 合并两个有序数组
+   */
+  
+  // @lc code=start
+  /**
+   * @param {number[]} nums1
+   * @param {number} m
+   * @param {number[]} nums2
+   * @param {number} n
+   * @return {void} Do not return anything, modify nums1 in-place instead.
+   */
+  var merge = function (nums1, m, nums2, n) {
+    let len1 = m - 1
+    let len2 = n - 1
+    let len = m + n - 1
+    // 分别比较实际末位 nums1[len1] & nums2[len2]，取大的值填入 nums1 当前最后位(len) 然后大值数组向前退位
+    // 直到 nums2 剩下的值都比 nums1 小【因为大的值都扔进 nums1 后面了】
+    while (len1 >= 0 && len2 >= 0) {
+      if (nums1[len1] > nums2[len2]) {
+        nums1[len] = nums1[len1]
+        len1--
+      } else {
+        nums1[len] = nums2[len2]
+        len2--
+      }
+      len--
+    }
+    // 将 nums2 剩余的小值从前面塞进 nums1
+    // 不用担心覆盖 nums1 前面的值，因为那些值都在后面了
+    nums1.splice(0, len2 + 1, ...nums2.slice(0, len2 + 1))
+  
+  };
+  ```
+
+  上述算法步骤解释：
+
+  ```
+  输入:
+  [3,5,0,0,0] m = 2
+  [1,2,6]			n = 3
+  
+  步骤[*代表当前指向]：
+  => 
+    nums1: [3,*5,0,0,0]  len1 = 1
+    nums2: [1,2,*6]			 len2 = 2
+  =>
+  	6 > 5,遵循“大值(6)塞后，向前退位”
+  	nums1: [3,*5,0,0,6]  len1 = 1
+    nums2: [1,*2,6]			 len2 = 1
+  =>
+  	2 < 5,遵循“大值(5)塞后，向前退位”
+  	nums1: [*3,5,0,5,6]  len1 = 0
+    nums2: [1,*2,6]			 len2 = 1
+  =>
+  	2 < 3,遵循“大值(3)塞后，向前退位”
+  	nums1: [3,5,3,5,6]   len1 = -1  (len1 不符合 while 条件，循环结束)
+    nums2: [1,*2,6]			 len2 = 1
+  =>
+  	此时 nums2，还剩有效(len2+1 即 2)位，将它覆盖塞入 num1 前部，nums1 的前部 2 位(即 [3,5])已经塞到 nums1 后面了
+  	nums1: [1,2,3,5,6]   
+    nums2: [1,2,6]
+  =>
+  	END.
+  ```
+
+  
