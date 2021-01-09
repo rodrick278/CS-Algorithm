@@ -10,6 +10,8 @@
 
 * [6. 环形链表[快慢指针]⭐](#6-环形链表快慢指针)
 
+* [7. 通过删除字母匹配到字典里最长单词](#7-通过删除字母匹配到字典里最长单词)
+
   
 
 # 双指针 Two Pointers
@@ -470,6 +472,95 @@ var hasCycle = function (head) {
     }
   }
   return false
+};
+```
+
+## 7. 通过删除字母匹配到字典里最长单词
+
+[524. 通过删除字母匹配到字典里最长单词](https://leetcode-cn.com/problems/longest-word-in-dictionary-through-deleting/description/)
+
+**题目:**
+
+给定一个字符串和一个字符串字典，找到字典里面最长的字符串，该字符串可以通过删除给定字符串的某些字符来得到。如果答案不止一个，返回长度最长且字典顺序最小的字符串。如果答案不存在，则返回空字符串。
+
+**说明:**
+
+1. 所有输入的字符串只包含小写字母。
+2. 字典的大小不会超过 1000。
+3. 所有输入的字符串长度不会超过 1000。
+
+**示例 1:**
+
+```
+输入:
+s = "abpcplea", d = ["ale","apple","monkey","plea"]
+
+输出: 
+"apple"
+```
+
+**示例 2:**
+
+```
+输入:
+s = "abpcplea", d = ["a","b","c"]
+
+输出: 
+"a"
+```
+
+**题解：**
+
+变量 `max` 存当前最大长度，`already` 存储已经遇到过的字符串，不二次处理。
+
+两个指针依次前推，和前面题目差不多
+
+```js
+/*
+ * @lc app=leetcode.cn id=524 lang=javascript
+ *
+ * [524] 通过删除字母匹配到字典里最长单词
+ */
+
+// @lc code=start
+/**
+ * @param {string} s
+ * @param {string[]} d
+ * @return {string}
+ */
+var findLongestWord = function (s, d) {
+  let result = ""// 存储满足结果的值
+  let max = 0
+  let already = new Set()
+
+  for (let dstr of d) {
+    // 长度比之前的小 or 已经遇到过的，直接 pass
+    if (dstr.length < max || already.has(dstr)) continue;
+    
+    let slen = s.length - 1
+    let dlen = dstr.length - 1
+
+    // 新值存入 Set
+    already.add(dstr)
+    // 按顺序比较 
+    while (dlen >= 0 && slen >= 0) {
+      if (s[slen] === dstr[dlen]) {// 匹配到了向前推进
+        slen--
+        dlen--
+      } else { // 不匹配 s 向前推进
+        slen--
+      }
+    }
+
+    //匹配成功 => 长度更长 or 长度相等时，字典顺序最小
+    if (dlen < 0
+      && ((dstr.length > result.length) || (dstr.length == result.length && dstr < result))) {
+      result = dstr
+      max = result.length
+    }
+  }
+
+  return result
 };
 ```
 
