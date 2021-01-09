@@ -8,6 +8,8 @@
 
 * [5. 合并两个有序数组⭐](#5-合并两个有序数组)
 
+* [6. 环形链表[快慢指针]⭐](#6-环形链表快慢指针)
+
   
 
 # 双指针 Two Pointers
@@ -380,7 +382,94 @@ nums2 = [2,5,6],       n = 3
   =>
     END.
   ```
+
+## 6. 环形链表[快慢指针]⭐
+
+[141. 环形链表](https://leetcode-cn.com/problems/linked-list-cycle/description/)
+
+**题目:**
+
+给定一个链表，判断链表中是否有环。
+
+如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。 为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意：pos 不作为参数进行传递，仅仅是为了标识链表的实际情况。
+
+如果链表中存在环，则返回 true 。 否则，返回 false 。
+
+**说明:**
+
+- 链表是 lc 后台代码生成的，传入的是已经生成好的链表对象
+- pos 是个概念，理解就行，不必深究
+- 链表结构可以参考 [这里](https://zh.javascript.info/recursion#lian-biao) 
+
+**示例 1：**
+
+![img](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist.png)
+
+```
+输入：head = [3,2,0,-4], pos = 1
+输出：true
+解释：链表中有一个环，其尾部连接到第二个节点。
 ```
 
-  
+**示例 2：**
+
+![img](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist_test2.png)
+
 ```
+输入：head = [1,2], pos = 0
+输出：true
+解释：链表中有一个环，其尾部连接到第一个节点。
+```
+
+**示例 3：**
+
+![img](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist_test3.png)
+
+```
+输入：head = [1], pos = -1
+输出：false
+解释：链表中没有环。
+```
+
+**题解：**
+
+```js
+/*
+ * @lc app=leetcode.cn id=141 lang=javascript
+ *
+ * [141] 环形链表
+ */
+
+// @lc code=start
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val) {
+ *     this.val = val;
+ *     this.next = null;
+ * }
+ */
+
+/**
+ * @param {ListNode} head
+ * @return {boolean}
+ */
+var hasCycle = function (head) {
+  // 判断有两个节点以上，否则不能成环
+  if (!head || !head.next) return false;
+
+  let slow = head
+  let fast = head.next
+  // 如果是非环没有 fast.next 的时候即走到终点
+  // fast 本身可能已经 undefined ，因为它是每次跨两步，在 fast.next?.next 的时候已经 undefined 了
+  while (fast && fast.next) {
+    if (slow === fast) {// 相遇
+      return true
+    } else {// 慢指针每次走一步，快指针每次走两步
+      slow = slow.next
+      fast = fast.next?.next
+    }
+  }
+  return false
+};
+```
+
