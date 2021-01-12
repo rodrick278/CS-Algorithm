@@ -33,7 +33,7 @@ function bubbleSort(arr) {
 
 ## 选择排序
 
-每次获取最小值放到最左边，然后向右缩小需要搜索的数组范围。
+内层循环每轮获取最小值放到最左边，然后向右缩小需要搜索的数组范围。
 
 ```js
 function selectSort(arr) {
