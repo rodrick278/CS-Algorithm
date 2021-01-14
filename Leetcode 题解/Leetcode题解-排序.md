@@ -148,15 +148,44 @@ function merge(left, right) {
 
 ## 堆排序⭐⭐
 
-用于求解 **TopK Elements** 问题，也就是 K 个最小元素的问题。使用最小堆来实现 TopK 问题，最小堆使用大顶堆来实现，大顶堆的堆顶元素为当前堆的最大元素。实现过程：不断地往大顶堆中插入新元素，当堆中元素的数量大于 k 时，移除堆顶元素，也就是当前堆中最大的元素，剩下的元素都为当前添加过的元素中最小的 K 个元素。插入和移除堆顶元素的时间复杂度都为 log2N。
+用于求解 **TopK Elements** 问题，也就是 K 个最小元素的问题。
 
-堆也可以用于求解 Kth Element 问题，得到了大小为 K 的最小堆之后，因为使用了大顶堆来实现，因此堆顶元素就是第 K 大的元素。
+堆排序的思路是：
+
+1. 从最后一个非叶子节点 `arr[Math.floor(arr.length/2)-1]` 开始，从顶向下堆化
+
+2. 堆化是分别判断每一个非叶子节点 `i` ，和它的左右子节点 `i*2+1` & `i*2+2` 进行大小比较，将这个“三角堆”中的最大或者最小值放到三角的顶端
+
+3. 大顶堆：`arr[i]>=arr[i*2+1] && arr[i]>=arr[i*2+2]`
+
+   小顶堆：`arr[i]<=arr[i*2+1] && arr[i]<=arr[i*2+2]`
+
+4. 形成顶堆之后**只能保证最上面的是最大值或者最小值**，最终形成排序需要反复将堆顶和当前堆底互换再堆化：
+
+   ```js
+   // 循环n-1次，每次循环后交换堆顶元素和堆底元素并重新调整堆结构
+   for (let i = nums.length - 1; i > 0; i--) {
+     [nums[i], nums[0]] = [nums[0], nums[i]];
+     this.heapify(nums, 0, i);// 参数：数组、堆顶index、需要堆化的size
+     console.log(`${nums[i]}作为堆顶元素：`, nums);
+   }
+   ```
+
+   
+
+堆排序参考文章 ：
+
+- https://www.cnblogs.com/chengxiao/p/6129630.html
+
+- https://juejin.cn/post/6844904039566540808#heading-33
+
+  
 
 快速选择也可以求解 TopK Elements 问题，因为找到 Kth Element 之后，再遍历一次数组，所有小于等于 Kth Element 的元素都是 TopK Elements。
 
 可以看到，快速选择和堆排序都可以求解 Kth Element 和 TopK Elements 问题
 
-### 1. 数组中的第K个最大元素
+### 1. 数组中的第K个最大元素⭐
 
 [215. 数组中的第K个最大元素](https://leetcode-cn.com/problems/kth-largest-element-in-an-array/)
 
@@ -184,19 +213,110 @@ function merge(left, right) {
 
 **题解：**
 
-1. sort()
+#### 1. 排序
 
-   ```js
-   /**
-    * @param {number[]} nums
-    * @param {number} k
-    * @return {number}
-    */
-   var findKthLargest = function(nums, k) {
-     return nums.sort((a,b)=>a-b)[nums.length-k]
-   };
-   ```
+```js
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+var findKthLargest = function(nums, k) {
+  return nums.sort((a,b)=>a-b)[nums.length-k]
+};
+```
 
-2. 快速排序
+#### 2. 堆排序
 
-   
+思路：取一个长度为 k 的数组，这个数组用来存前 k 个最大值，因为前 k 个最大值作出小顶堆之后，第一个值就是目标值。
+
+1. 先将 nums 前 k 个数做成数组 arr，然后小顶堆化。
+
+2. 从 nums[k] 开始向后遍历，如果值比 arr[0] 大，就说明 arr 里存的不是最大的 k 个值，
+
+3. 执行 `arr[0]=nums[k]` ，然后再小顶堆化。
+
+4. 结果产生
+
+```js
+/*
+ * @lc app=leetcode.cn id=215 lang=javascript
+ *
+ * [215] 数组中的第K个最大元素
+ */
+
+// @lc code=start
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+let findKthLargest = function (nums, k) {
+  let arr = []
+  // 先构建一个有 k 个数的数组
+  arr.push(...nums.slice(0, k))
+  // 为了取前k个数最小值，所以我们先要造小顶堆
+  buildHeap(arr, k)
+
+  for (let i = k; i < nums.length; i++) {
+    if (nums[i] > arr[0]) {
+      arr[0] = nums[i]
+      heapify(arr, 0, arr.length)
+    }
+  }
+  return arr[0]
+};
+
+/**
+ * @description: 构建堆
+ * @Author: rodrick
+ * @Date: 2021-01-14 22:16:03
+ * @param {*} arr 数组
+ * @param {*} size 需要堆化的长度
+ * @return {*}
+ */
+function buildHeap(arr, size) {
+  // 从最后一个非叶子节点开始
+  let start = Math.floor(size / 2) - 1
+  for (let i = start; i >= 0; i--) {
+    heapify(arr, i, size)
+  }
+}
+/**
+ * @description: 从上向下堆化
+ * @Author: rodrick
+ * @Date: 2021-01-14 22:14:58
+ * @param {*} arr 数组
+ * @param {*} index 堆顶index
+ * @param {*} size 需要堆化的长度
+ * @return {*}
+ */
+function heapify(arr, index, size) {
+  while (true) {
+    // 我们需要不断提取出最大值到堆三角的上面，所以需要 min
+    let min = index
+    let left = index * 2 + 1 // 左节点
+    let right = index * 2 + 2 // 右节点
+    // 先判断和 size 对比，因为目标 size 不一定等于 arr 长度，不是一直都整个数组需要堆化
+    // 然后找到这个堆三角中的最大值，替换
+    if (left < size && arr[left] < arr[min]) {
+      min = left
+    }
+    if (right < size && arr[right] < arr[min]) {
+      min = right
+    }
+    // 注意这里很重要！先把最大的值拿到三角堆顶，这次交换可能已经破坏了堆结构！
+    // 所以把 index 放到 min 的位置【min 可能是三角底的某个角】
+    // 然后我们再循环，确认当前 min 作为顶的三角是不是被破坏了，如果破坏了再堆化，再往下层确认，直到没有发生破坏为止
+    if (min != index) {
+      [arr[min], arr[index]] = [arr[index], arr[min]]
+      index = min
+    } else {
+      break;
+    }
+  }
+}
+```
+
+
+
