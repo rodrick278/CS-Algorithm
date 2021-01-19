@@ -7,6 +7,8 @@
 - [605. 种花问题](#605-种花问题)
 - [392. 判断子序列](#392-判断子序列)
 - [665. 非递减数列](#665-非递减数列)
+- [53. 最大子序和](#53-最大子序和)
+- [763. 划分字母区间](763-划分字母区间)
 
 # 贪心算法
 
@@ -420,6 +422,8 @@ var canPlaceFlowers = function (flowerbed, n) {
 
 **题解：**
 
+双指针
+
 ```js
 /*
  * @lc app=leetcode.cn id=392 lang=javascript
@@ -504,6 +508,103 @@ var checkPossibility = function (nums) {
     }
   }
   return true
+};
+```
+
+## [53. 最大子序和](https://leetcode-cn.com/problems/maximum-subarray/)
+
+给定一个整数数组 `nums` ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+
+**示例:**
+
+```
+输入: [-2,1,-3,4,-1,2,1,-5,4]
+输出: 6
+解释: 连续子数组 [4,-1,2,1] 的和最大，为 6。
+```
+
+**题解：**
+
+```js
+/*
+ * @lc app=leetcode.cn id=53 lang=javascript
+ *
+ * [53] 最大子序和
+ */
+
+// @lc code=start
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var maxSubArray = function (nums) {
+  let max = nums[0]
+  let presum = 0 // 存储上一轮的总和，并不是上一轮的实际最大值
+
+  for (let num of nums) {
+    if (presum > 0) {
+      presum += num
+    } else {
+      presum = num
+    }
+    max = Math.max(presum, max)
+  }
+  return max
+};
+```
+
+## [763. 划分字母区间⭐](https://leetcode-cn.com/problems/partition-labels/)
+
+字符串 `S` 由小写字母组成。我们要把这个字符串划分为尽可能多的片段，同一字母最多出现在一个片段中。返回一个表示每个字符串片段的长度的列表。
+
+**示例：**
+
+```
+输入：S = "ababcbacadefegdehijhklij"
+输出：[9,7,8]
+解释：
+划分结果为 "ababcbaca", "defegde", "hijhklij"。
+每个字母最多出现在一个片段中。
+像 "ababcbacadefegde", "hijhklij" 的划分是错误的，因为划分的片段数较少。
+```
+
+**题解：**
+
+思路：遍历字符串时，需要更新最远切割点。
+
+```js
+/*
+ * @lc app=leetcode.cn id=763 lang=javascript
+ *
+ * [763] 划分字母区间
+ */
+
+// @lc code=start
+/**
+ * @param {string} S
+ * @return {number[]}
+ */
+var partitionLabels = function (S) {
+  let start = 0 // 记录当前开始切割点
+  let end = 0 // 记录循环中当前结束切割点
+  let result = [] // 记录结果
+  let map = {} // 存放 字母：字母的最远距离
+  let set = new Set(S.split(''))// 去重一下数组
+  for (let char of set) {
+    map[char] = S.lastIndexOf(char)
+  }
+
+  for (let i in S) {
+    let charMax = map[S[i]]// 获取当前字母最远距离
+    // 结束切割点取最远的值，如果当前最远距离更大就更新结束点
+    end = Math.max(end, charMax)
+    // 如果一路走到了切割结束点的位置结束点都没更新，就切割
+    if (+i === end) {
+      result.push(i - start + 1)
+      start = +i + 1
+    }
+  }
+  return result
 };
 ```
 
