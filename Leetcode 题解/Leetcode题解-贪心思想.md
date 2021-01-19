@@ -4,6 +4,7 @@
 - [406. 根据身高重建队列](#406-根据身高重建队列)
 - [121. 买卖股票的最佳时机](#121-买卖股票的最佳时机)
 - [122. 买卖股票的最佳时机 II](#122-买卖股票的最佳时机-II)
+- [605. 种花问题](#605-种花问题)
 
 # 贪心算法
 
@@ -306,7 +307,7 @@ var maxProfit = function (prices) {
 
 设计一个算法来计算你所能获取的最大利润。你可以尽可能地完成更多的交易（多次买卖一支股票）。
 
-**注意：**你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+**注意：** 你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
 
 **示例 1:**
 
@@ -342,6 +343,56 @@ var maxProfit = function (prices) {
     max += Math.max(0, prices[i] - prices[i - 1])
   }
   return max
+};
+```
+
+## [605. 种花问题](https://leetcode-cn.com/problems/can-place-flowers/)
+
+假设有一个很长的花坛，一部分地块种植了花，另一部分却没有。可是，花不能种植在相邻的地块上，它们会争夺水源，两者都会死去。
+
+给你一个整数数组 `flowerbed` 表示花坛，由若干 `0` 和 `1` 组成，其中 `0` 表示没种植花，`1` 表示种植了花。另有一个数 `n` ，能否在不打破种植规则的情况下种入 `n` 朵花？能则返回 `true` ，不能则返回 `false`。
+
+**示例 1：**
+
+```
+输入：flowerbed = [1,0,0,0,1], n = 1
+输出：true
+```
+
+**示例 2：**
+
+```
+输入：flowerbed = [1,0,0,0,1], n = 2
+输出：false
+```
+
+**题解：**
+
+思路：可以种花的条件：①当前为 0 ；② 左右都不为 1（0 或者 undefined【头尾时】都可以）
+
+```js
+/*
+ * @lc app=leetcode.cn id=605 lang=javascript
+ *
+ * [605] 种花问题
+ */
+
+// @lc code=start
+/**
+ * @param {number[]} flowerbed
+ * @param {number} n
+ * @return {boolean}
+ */
+var canPlaceFlowers = function (flowerbed, n) {
+  let count = 0
+
+  for (let i = 0; i < flowerbed.length; i++) {
+    if (flowerbed[i] == 0 && flowerbed[i - 1] != 1 && flowerbed[i + 1] != 1) {
+      if (++count >= n) return true
+      flowerbed[i] = 1
+    }
+  }
+  return count >= n
 };
 ```
 
