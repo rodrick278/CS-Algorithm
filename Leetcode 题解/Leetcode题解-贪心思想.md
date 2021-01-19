@@ -3,6 +3,7 @@
 - [452. 用最少数量的箭引爆气球](#452-用最少数量的箭引爆气球)
 - [406. 根据身高重建队列](#406-根据身高重建队列)
 - [121. 买卖股票的最佳时机](#121-买卖股票的最佳时机)
+- [122. 买卖股票的最佳时机 II](#122-买卖股票的最佳时机-II)
 
 # 贪心算法
 
@@ -295,6 +296,51 @@ var maxProfit = function (prices) {
     max = Math.max(max, price - minPrice)// 负数的话就是 0 
   }
 
+  return max
+};
+```
+
+## [122. 买卖股票的最佳时机 II](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
+
+给定一个数组，它的第 *i* 个元素是一支给定股票第 *i* 天的价格。
+
+设计一个算法来计算你所能获取的最大利润。你可以尽可能地完成更多的交易（多次买卖一支股票）。
+
+**注意：**你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+
+**示例 1:**
+
+```
+输入: [7,1,5,3,6,4]
+输出: 7
+解释: 在第 2 天（股票价格 = 1）的时候买入，在第 3 天（股票价格 = 5）的时候卖出, 这笔交易所能获得利润 = 5-1 = 4 。
+     随后，在第 4 天（股票价格 = 3）的时候买入，在第 5 天（股票价格 = 6）的时候卖出, 这笔交易所能获得利润 = 6-3 = 3 。
+```
+
+**题解：**
+
+思路：假设 `[1,3,5]` ，1 买入 5 卖出，和 1 买入 3 卖出，3 再买入 5再卖出，结果是一样的，所以只需要一步步遍历即可，如果后面比前面的值大相当于这步不买入，即为 0。
+
+```js
+/*
+ * @lc app=leetcode.cn id=122 lang=javascript
+ *
+ * [122] 买卖股票的最佳时机 II
+ */
+
+// @lc code=start
+/**
+ * @param {number[]} prices
+ * @return {number}
+ */
+var maxProfit = function (prices) {
+  if (!prices || !prices.length) return 0
+
+  let max = 0
+  let i = 0
+  while (++i < prices.length) {
+    max += Math.max(0, prices[i] - prices[i - 1])
+  }
   return max
 };
 ```
