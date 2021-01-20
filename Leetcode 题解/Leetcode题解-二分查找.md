@@ -1,6 +1,8 @@
 - [常用方法和变量](#常用方法和变量)
 - [69. x 的平方根](#69-x-的平方根)
 - [744. 寻找比目标字母大的最小字母⭐](#744-寻找比目标字母大的最小字母)
+- [540. 有序数组中的单一元素](#540-有序数组中的单一元素)
+- [278. 第一个错误的版本](#278-第一个错误的版本)
 
 # 二分查找
 
@@ -145,6 +147,135 @@ var nextGreatestLetter = function (letters, target) {
   }
   // 如果letters[mid]一直比target小，那么l会大过最后一位【因为r一直在最后一位没动】，l越界就拿[0]
   return letters[l] ? letters[l] : letters[0]
+};
+```
+
+## [540. 有序数组中的单一元素](https://leetcode-cn.com/problems/single-element-in-a-sorted-array/)
+
+给定一个只包含整数的有序数组，每个元素都会出现两次，唯有一个数只会出现一次，找出这个数。
+
+**示例 1:**
+
+```
+输入: [1,1,2,3,3,4,4,8,8]
+输出: 2
+```
+
+**示例 2:**
+
+```
+输入: [3,3,7,7,10,11,11]
+输出: 10
+```
+
+**题解：**
+
+思路：推一推示例中的值，会发现需要根据奇偶情况进行判断，剩下的套公式就行
+
+```js
+/*
+* @lc app=leetcode.cn id=540 lang=javascript
+*
+* [540] 有序数组中的单一元素
+*/
+
+// @lc code=start
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var singleNonDuplicate = function (nums) {
+  let l = 0
+  let r = nums.length - 1
+  let mid
+  while (l <= r) {
+    mid = Math.floor(l + (r - l) / 2)
+
+    if (nums[mid] === nums[mid + 1]) {
+      if (mid % 2 == 1) {
+        r = mid - 1
+      } else {
+        l = mid + 1
+      }
+    } else if (nums[mid] === nums[mid - 1]) {
+      if (mid % 2 == 1) {
+        l = mid + 1
+      } else {
+        r = mid - 1
+      }
+    } else {
+      return nums[mid]
+    }
+  }
+};
+```
+
+## [278. 第一个错误的版本](https://leetcode-cn.com/problems/first-bad-version/)
+
+你是产品经理，目前正在带领一个团队开发新的产品。不幸的是，你的产品的最新版本没有通过质量检测。由于每个版本都是基于之前的版本开发的，所以错误的版本之后的所有版本都是错的。
+
+假设你有 `n` 个版本 `[1, 2, ..., n]`，你想找出导致之后所有版本出错的第一个错误的版本。
+
+你可以通过调用 `bool isBadVersion(version)` 接口来判断版本号 `version` 是否在单元测试中出错。实现一个函数来查找第一个错误的版本。你应该尽量减少对调用 API 的次数。
+
+**示例:**
+
+```
+给定 n = 5，并且 version = 4 是第一个错误的版本。
+
+调用 isBadVersion(3) -> false
+调用 isBadVersion(5) -> true
+调用 isBadVersion(4) -> true
+
+所以，4 是第一个错误的版本
+```
+
+**题解：**
+
+```js
+/*
+ * @lc app=leetcode.cn id=278 lang=javascript
+ *
+ * [278] 第一个错误的版本
+ */
+
+// @lc code=start
+/**
+ * Definition for isBadVersion()
+ * 
+ * @param {integer} version number
+ * @return {boolean} whether the version is bad
+ * isBadVersion = function(version) {
+ *     ...
+ * };
+ */
+
+/**
+ * @param {function} isBadVersion()
+ * @return {function}
+ */
+var solution = function (isBadVersion) {
+  /**
+   * @param {integer} n Total versions
+   * @return {integer} The first bad version
+   */
+  return function (n) {
+    if (isBadVersion(1)) return 1
+
+    let l = 1
+    let r = n
+    let mid
+    while (l <= r) {
+      mid = Math.floor(l + (r - l) / 2)
+      if (isBadVersion(mid)) {
+        r = mid - 1
+      } else {
+        l = mid + 1
+      }
+    }
+    return l
+
+  };
 };
 ```
 
