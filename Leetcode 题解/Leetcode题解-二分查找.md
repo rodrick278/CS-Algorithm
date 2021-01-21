@@ -3,6 +3,8 @@
 - [744. 寻找比目标字母大的最小字母⭐](#744-寻找比目标字母大的最小字母)
 - [540. 有序数组中的单一元素](#540-有序数组中的单一元素)
 - [278. 第一个错误的版本](#278-第一个错误的版本)
+- [153. 寻找旋转排序数组中的最小值⭐](#153-寻找旋转排序数组中的最小值)
+- [34. 在排序数组中查找元素的第一个和最后一个位置⭐](#34-在排序数组中查找元素的第一个和最后一个位置)
 
 # 二分查找
 
@@ -276,6 +278,190 @@ var solution = function (isBadVersion) {
     return l
 
   };
+};
+```
+
+## [153. 寻找旋转排序数组中的最小值⭐](https://leetcode-cn.com/problems/find-minimum-in-rotated-sorted-array/)
+
+假设按照升序排序的数组在预先未知的某个点上进行了旋转。例如，数组 `[0,1,2,4,5,6,7]` 可能变为 `[4,5,6,7,0,1,2]` 。
+
+请找出其中最小的元素。
+
+**示例 1：**
+
+```
+输入：nums = [3,4,5,1,2]
+输出：1
+```
+
+**示例 2：**
+
+```
+输入：nums = [1]
+输出：1
+```
+
+**题解：**
+
+这题的注意点有几个：
+
+1. `nums[mid]` 和 `nums[r]` 比较的话，如果 `nums[mid] < nums[r]` ，可能这个时候已经到了最小值，所以不能 `r=mid-1`，必须要 `r=mid` 
+2. 判断条件是 `while(l<r)` ，因为类似 `[1]` 的时候可能会导致永远走 `else` ，r 就一直等于 mid，用 `while(l<=r)` 会死循环
+
+所以说不能死套公式。
+
+```js
+/*
+ * @lc app=leetcode.cn id=153 lang=javascript
+ *
+ * [153] 寻找旋转排序数组中的最小值
+ */
+
+// @lc code=start
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findMin = function (nums) {
+  let l = 0
+  let r = nums.length - 1
+  let mid
+
+  while (l < r) {
+    // 如果小于等于没反转就直接 return 了
+    if (nums[l] <= nums[r]) return nums[l]
+    mid = Math.floor(l + (r - l) / 2)
+    if (nums[mid] > nums[r]) {
+      // mid 在左段
+      l = mid + 1
+    } else {
+      r = mid
+    }
+  }
+  return nums[l]
+};
+```
+
+## [34. 在排序数组中查找元素的第一个和最后一个位置⭐](https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
+
+给定一个按照**升序排列**的整数数组 `nums`，和一个目标值 `target`。找出给定目标值在数组中的开始位置和结束位置。
+
+如果数组中不存在目标值 `target`，返回 `[-1, -1]`。
+
+**示例 1：**
+
+```
+输入：nums = [5,7,7,8,8,10], target = 8
+输出：[3,4]
+```
+
+**示例 2：**
+
+```
+输入：nums = [5,7,7,8,8,10], target = 6
+输出：[-1,-1]
+```
+
+**示例 3：**
+
+```
+输入：nums = [], target = 0
+输出：[-1,-1]
+```
+
+**题解1：**
+
+步骤就两个：
+
+1. 正常二分
+2. 当mid命中target的时候，可能是多种情况(target=2)：
+   1. 最左侧 [1,\*2,2]
+   2. 最右侧 [2,\*2,3]
+   3. 中间某个位置[2,\*2,2]
+   4. 左右都没 [\*2]
+
+所以不管左右有没有，我们分别向左右辐射，只要下一个不是 target 就说明到边界了
+
+```js
+/*
+ * @lc app=leetcode.cn id=34 lang=javascript
+ *
+ * [34] 在排序数组中查找元素的第一个和最后一个位置
+ */
+
+// @lc code=start
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number[]}
+ */
+var searchRange = function (nums, target) {
+  let start = 0
+  let end = nums.length - 1
+  let mid
+  while (start <= end) {
+    // 正常二分
+    mid = Math.floor(start + (end - start) / 2)
+
+    if (nums[mid] > target) {
+      end = mid - 1
+    }
+    if (nums[mid] < target) {
+      start = mid + 1
+    }
+    // 当mid命中target的时候，可能是多种情况：
+    // 1. 最左侧 [1,*2,2]
+    // 2. 最右侧 [2,*2,3]
+    // 3. 中间某个位置[2,*2,2]
+    // 4. 左右都没 [*2]
+    // 所以不管左右有没有，我们分别向左右辐射，只要下一个不是 target 就说明到边界了
+    if (nums[mid] == target) {
+      let max = mid
+      let min = mid
+      while (nums[max + 1] == target) {
+        max++
+      }
+      while (nums[min - 1] == target) {
+        min--
+      }
+      return [min, max]
+    }
+  }
+  return [-1, -1]
+};
+```
+
+**官方题解：**
+
+思路：
+
+1. 用两次二分分别去拿左边的下标 `leftIdx` 和右边的下标 `rightIdx`
+2. 这两次的区别在于用 `lower`  决定命中的时候，即 `nums[mid]==target` ，让 left 向右还是 right 向左。 `lower==true` 时为了取 `leftIdx` 所以向左
+3. 取出来之后再对这两个值做一堆边界处理，过滤出越界不存在等情况
+
+```js
+const binarySearch = (nums, target, lower) => { 
+    let left = 0, right = nums.length - 1, ans = nums.length;
+    while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
+        if (nums[mid] > target || (lower && nums[mid] >= target)) {
+            right = mid - 1;
+            ans = mid;
+        } else {
+            left = mid + 1;
+        }
+    }
+    return ans;
+}
+
+var searchRange = function(nums, target) {
+    let ans = [-1, -1];
+    const leftIdx = binarySearch(nums, target, true);
+    const rightIdx = binarySearch(nums, target, false) - 1;
+    if (leftIdx <= rightIdx && rightIdx < nums.length && nums[leftIdx] === target && nums[rightIdx] === target) {
+        ans = [leftIdx, rightIdx];
+    } 
+    return ans;
 };
 ```
 
