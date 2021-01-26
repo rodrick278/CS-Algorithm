@@ -77,7 +77,7 @@
  * @return {number}
  */
 var shortestPathBinaryMatrix = function (grid) {
-  let res = 0
+  let res = 1
   let k = grid.length - 1
   // 开头结尾阻塞情况
   if (grid[0][0] == 1 || grid[k][k] == 1) return -1
@@ -93,16 +93,16 @@ var shortestPathBinaryMatrix = function (grid) {
   // 判断队列里是否还有待循环的
   while (list.length != 0) {
     let len = list.length
-    // 放在下面的while前面，①第一次进入的时候 0=>1 ② 最后一次进入的时候里面会直接返回res
+    // 放在下面的while前面，一定会有一个下一层的值，先加上
     res++
     // 这个while必须用len来判断，因为list的内容在不断插入，而我们一轮只需要遍历开始插入前的那几个位置就行
     while (len--) {
       let [x, y] = list.shift()
-      // 如果到达了终点 返回
-      if (x == k && y == k) return res
       for (let item of findArrs) {
         loopX = x + item[0]
         loopY = y + item[1]
+        // 如果到达了终点 返回res【前面res已经加过了】
+      	if (x == k && y == k) return res
         // 判断越界或者为1
         if (loopX > k || loopY > k || loopX < 0 || loopY < 0 || grid[loopX][loopY] == 1) continue;
         // 把这个位置标记为已遍历
