@@ -1,7 +1,8 @@
-- [BFS](#BFS)
+- [BFS⭐](#BFS)
   - [1091. 二进制矩阵中的最短路径](#1091-二进制矩阵中的最短路径)
+  - [279. 完全平方数](#279-完全平方数)
 
-# BFS
+# BFS⭐
 
 **广度优先搜索** 一层一层地进行遍历，每层遍历都是以上一层遍历的结果作为起点，遍历一个距离能访问到的所有节点。需要注意的是，遍历过的节点不能再次被遍历。
 
@@ -112,6 +113,88 @@ var shortestPathBinaryMatrix = function (grid) {
     }
   }
   return -1
+};
+```
+
+## [279. 完全平方数](https://leetcode-cn.com/problems/perfect-squares/)
+
+给定正整数 *n*，找到若干个完全平方数（比如 `1, 4, 9, 16, ...`）使得它们的和等于 *n*。你需要让组成和的完全平方数的个数最少。
+
+给你一个整数 `n` ，返回和为 `n` 的完全平方数的 **最少数量** 。
+
+**完全平方数** 是一个整数，其值等于另一个整数的平方；换句话说，其值等于一个整数自乘的积。例如，`1`、`4`、`9` 和 `16` 都是完全平方数，而 `3` 和 `11` 不是。
+
+**示例 1：**
+
+```
+输入：n = 12
+输出：3 
+解释：12 = 4 + 4 + 4
+```
+
+**示例 2：**
+
+```
+输入：n = 13
+输出：2
+解释：13 = 4 + 9
+```
+
+**题解：**
+
+这里的思路：
+
+1. 每一层用当前值循环减去从1开始的平方数，减下来的值 temp 如果是 0 ，说明已经结束
+2. 如果不为 0 ，说明还需要再减平方数，所以把这些 temp 塞进 queue
+3. 但是注意，如果这个 temp 已经访问过，那么再遇到的时候就不要访问了，因为那时候肯定不是最短路径
+
+> 比如 13 ，在 13-1\*1-2\*2=8,这是第三层遇到了8，然后在 13-2\*2-1\*1=8 又遇到了8,这种重复值层数越高就可能越多，所以用 visited 去重。
+>
+> 也有可能是你在第三层碰到的值，我在第二层已经扔进过 queue 处理过了。
+
+**为什么用 level 来决定结果？**
+
+因为每减一次，不管你减多少，都肯定减去了一个平方数，**level 就是减了几次平方数的次数**。
+
+下图每两个 step 中间就相当于我们的 level，step2 的 3 是 `7-1` ，图上画错了
+
+<img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9waWMubGVldGNvZGUtY24uY29tL0ZpZ3VyZXMvMjc5LzI3OV9ncmVlZHlfYmZzLnBuZw?x-oss-process=image/format,png" width=80%>
+
+```js
+/*
+ * @lc app=leetcode.cn id=279 lang=javascript
+ *
+ * [279] 完全平方数
+ */
+
+// @lc code=start
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var numSquares = function (n) {
+  let level = 0
+  let queue = [n] // 存放待处理值
+  let visited = new Set([n]) // 存放已经计算过的值
+
+  while (queue.length !== 0) {
+    level++
+    let len = queue.length
+    while (len--) {
+      let now = queue.shift()
+      for (let i = 1; i ** 2 <= now; i++) {
+        let temp = now - i ** 2
+        if (temp === 0) {
+          return level
+        }
+        if (!visited.has(temp)) {
+          visited.add(temp)
+          queue.push(temp)
+        }
+      }
+    }
+  }
+  return level
 };
 ```
 
