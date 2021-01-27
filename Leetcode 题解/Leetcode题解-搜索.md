@@ -1,6 +1,7 @@
 - [BFS⭐](#BFS)
   - [1091. 二进制矩阵中的最短路径](#1091-二进制矩阵中的最短路径)
   - [279. 完全平方数](#279-完全平方数)
+  - [127. 单词接龙](#127-单词接龙)
 
 # BFS⭐
 
@@ -197,4 +198,121 @@ var numSquares = function (n) {
   return level
 };
 ```
+
+## [127. 单词接龙](https://leetcode-cn.com/problems/word-ladder/)
+
+字典 `wordList` 中从单词 `beginWord` 和 `endWord` 的 **转换序列** 是一个按下述规格形成的序列：
+
+- 序列中第一个单词是 `beginWord` 。
+- 序列中最后一个单词是 `endWord` 。
+- 每次转换只能改变一个字母。
+- 转换过程中的中间单词必须是字典 `wordList` 中的单词。
+
+给你两个单词 `beginWord` 和 `endWord` 和一个字典 `wordList` ，找到从 `beginWord` 到 `endWord` 的 **最短转换序列** 中的 **单词数目** 。如果不存在这样的转换序列，返回 0。
+
+**示例 1：**
+
+```
+输入：beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log","cog"]
+输出：5
+解释：一个最短转换序列是 "hit" -> "hot" -> "dot" -> "dog" -> "cog", 返回它的长度 5。
+```
+
+**题解1：**
+
+图片来源 
+
+![](https://pic.leetcode-cn.com/1604545018-HfmzZg-image.png)
+
+注意点：
+
+1. 用26个字母循环拼接字符串然后反过来查找 wordSet 是否存在目标字符，比每次循环 wordSet 效率高很多（wordSet 数量多）
+2. 本题标记的方法是塞入 queue 之后直接从 wordSet 中删除
+
+```js
+/**
+ * @param {string} beginWord
+ * @param {string} endWord
+ * @param {string[]} wordList
+ * @return {number}
+ */
+var ladderLength = function (beginWord, endWord, wordList) {
+
+  let wordSet = new Set(wordList)
+  let queue = [beginWord]
+  let res = 0
+
+  if (!wordSet.has(endWord)) return 0
+
+  while (queue.length !== 0) {
+    let len = queue.length
+    res++
+    while (len--) {
+      let word = queue.shift()
+      if (word === endWord) return res
+
+      for (let i = 0; i < word.length; i++) {
+        for (let c = 97; c <= 122; c++) {
+          const newWord = word.slice(0, i) + String.fromCharCode(c) + word.slice(i + 1); 
+          if (wordSet.has(newWord)) {
+            queue.push(newWord)
+            wordSet.delete(newWord)
+          }
+        }
+      }
+    }
+  }
+  return 0
+};
+```
+
+**题解2：**
+
+双向广度解法：我们可以从 beginWord 和 endWord 前后同时出发，进行 bfs，每一次循环并不是同时扩散双向队列，而是选择其中一个较小的队列进行扩散（扩散的波纹类似双指针），beforeQueue始终是较小者（互换）
+
+beforeQueue 中衍生出的 newWord 如果在 endQueue 中存在，则表示两者相遇；不需要判断 newWord 是否在 wordList 中，因为 endQueue 中存在的单词必定在 wordList 中
+
+```js
+/**
+ * @param {string} beginWord
+ * @param {string} endWord
+ * @param {string[]} wordList
+ * @return {number}
+ */
+var ladderLength = function(beginWord, endWord, wordList) {
+  if (!wordList.includes(endWord)) { return 0 }
+  let beforeQueue = [[beginWord, 1]] // 从起点出发
+  let endQueue = [[endWord, 1]] // 从终点出发
+  const wordListSet = new Set(wordList)
+  while(beforeQueue.length && endQueue.length) { // 只有两者都不为空时，循环才继续，如果有一者为空，表示某一边已经走死，不能继续
+    if (beforeQueue.length > endQueue.length) {
+      [beforeQueue, endQueue] = [endQueue, beforeQueue] // beforeQueue始终保持较小
+    }
+    const currentLevelSize = beforeQueue.length
+    for (let i = 0; i < currentLevelSize; i++) {
+      const [word, level] = beforeQueue.shift()
+      for (let l = 0; l < word.length; l++) { // 遍历单词，把能转换的单词push入队列
+        for (let charCode = 97; charCode <= 122; charCode++) {
+          const newWord = `${word.slice(0, l)}${String.fromCharCode(charCode)}${word.slice(l + 1)}`
+          const index = endQueue.findIndex(item => item[0] === newWord)
+          if (index !== -1) { // 这里不需要判断newWord是否在wordList中，因为endQueue中存在的单词必定在wordList中
+            return endQueue[index][1] + level
+          }
+          if (wordListSet.has(newWord)) {
+            beforeQueue.push([newWord, level + 1])
+            wordListSet.delete(newWord)
+          }
+        }
+      }
+    }
+  }
+  return 0
+};
+```
+
+
+
+
+
+
 
