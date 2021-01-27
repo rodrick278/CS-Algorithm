@@ -1,7 +1,7 @@
 - [BFS⭐](#BFS)
   - [1091. 二进制矩阵中的最短路径](#1091-二进制矩阵中的最短路径)
   - [279. 完全平方数](#279-完全平方数)
-  - [127. 单词接龙](#127-单词接龙)
+  - [127. 单词接龙⭐](#127-单词接龙)
 
 # BFS⭐
 
@@ -268,7 +268,7 @@ var ladderLength = function (beginWord, endWord, wordList) {
 
 **题解2：**
 
-双向广度解法：我们可以从 beginWord 和 endWord 前后同时出发，进行 bfs，每一次循环并不是同时扩散双向队列，而是选择其中一个较小的队列进行扩散（扩散的波纹类似双指针），beforeQueue始终是较小者（互换）
+**双向广度解法**：我们可以从 beginWord 和 endWord 前后同时出发，进行 bfs，每一次循环并不是同时扩散双向队列，而是选择其中一个较小的队列进行扩散（扩散的波纹类似双指针），**beforeQueue 始终是较小者（互换）**
 
 beforeQueue 中衍生出的 newWord 如果在 endQueue 中存在，则表示两者相遇；不需要判断 newWord 是否在 wordList 中，因为 endQueue 中存在的单词必定在 wordList 中
 
@@ -279,18 +279,21 @@ beforeQueue 中衍生出的 newWord 如果在 endQueue 中存在，则表示两�
  * @param {string[]} wordList
  * @return {number}
  */
-var ladderLength = function(beginWord, endWord, wordList) {
+var ladderLength = function (beginWord, endWord, wordList) {
   if (!wordList.includes(endWord)) { return 0 }
   let beforeQueue = [[beginWord, 1]] // 从起点出发
   let endQueue = [[endWord, 1]] // 从终点出发
   const wordListSet = new Set(wordList)
-  while(beforeQueue.length && endQueue.length) { // 只有两者都不为空时，循环才继续，如果有一者为空，表示某一边已经走死，不能继续
+
+  while (beforeQueue.length && endQueue.length) { // 只有两者都不为空时，循环才继续，如果有一者为空，表示某一边已经走死，不能继续
     if (beforeQueue.length > endQueue.length) {
       [beforeQueue, endQueue] = [endQueue, beforeQueue] // beforeQueue始终保持较小
     }
+
     const currentLevelSize = beforeQueue.length
     for (let i = 0; i < currentLevelSize; i++) {
       const [word, level] = beforeQueue.shift()
+
       for (let l = 0; l < word.length; l++) { // 遍历单词，把能转换的单词push入队列
         for (let charCode = 97; charCode <= 122; charCode++) {
           const newWord = `${word.slice(0, l)}${String.fromCharCode(charCode)}${word.slice(l + 1)}`
@@ -304,10 +307,48 @@ var ladderLength = function(beginWord, endWord, wordList) {
           }
         }
       }
+
     }
   }
   return 0
 };
+```
+
+**整体变化如下**：
+
+\* 代表被 `shift()` 或者 `delete()` 
+
+相当于一条线找出了 `"hit" -> "hot" -> "dot" -> "dog"` 这条线，另外一条找出了 `"cog" -> "dog"` 这条线
+
+```
+"hit","cog",["hot","dot","dog","lot","log","cog"]
+------------------------------------------------
+level:1 begin hit
+level:1 end   cog
+
+["hot","dot","dog","lot","log","cog"]
+------------------------------------------------
+level:2 begin *hit  hot
+level:1 end   cog
+
+[*"hot","dot","dog","lot","log","cog"]
+------------------------------------------------
+level:3 begin *hit *hot dot lot
+level:1 end   cog
+
+[*"dot","dog",*"lot","log","cog"]
+------------------------------------------------
+level:3 end    *hit *hot dot lot
+level:2 begin  *cog dog log cog
+
+[*"dog",*"log",*"cog"]
+------------------------------------------------
+level:3 begin  *hit *hot 【dot】 lot
+level:2 end    *cog 【dog】 log cog
+
+[]
+【dot】变化出【dog】在 end 中命中！
+return 3 + 2 = 5
 ```
 
 
