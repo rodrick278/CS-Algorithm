@@ -5,6 +5,8 @@
 - [DFS⭐](#DFS)
   - [695. 岛屿的最大面积](#695-岛屿的最大面积)
   - [200. 岛屿数量](#200-岛屿数量)
+  - [547. 省份数量](#547-省份数量)
+  - [130. 被围绕的区域](#130-被围绕的区域)
 
 # BFS⭐
 
@@ -493,5 +495,147 @@ function sub(i, j, grid) {
 }
 ```
 
+## [547. 省份数量](https://leetcode-cn.com/problems/number-of-provinces/)
 
+有 `n` 个城市，其中一些彼此相连，另一些没有相连。如果城市 `a` 与城市 `b` 直接相连，且城市 `b` 与城市 `c` 直接相连，那么城市 `a` 与城市 `c` 间接相连。
+
+**省份** 是一组直接或间接相连的城市，组内不含其他没有相连的城市。
+
+给你一个 `n x n` 的矩阵 `isConnected` ，其中 `isConnected[i][j] = 1` 表示第 `i` 个城市和第 `j` 个城市直接相连，而 `isConnected[i][j] = 0` 表示二者不直接相连。
+
+返回矩阵中 **省份** 的数量。
+
+**示例 1：**
+
+<img src="https://assets.leetcode.com/uploads/2020/12/24/graph1.jpg" width=70%>
+
+```
+输入：isConnected = [[1,1,0],[1,1,0],[0,0,1]]
+输出：2
+```
+
+**题解：**
+
+```js
+/**
+ * @param {number[][]} isConnected
+ * @return {number}
+ */
+var findCircleNum = function (isConnected) {
+  let x = isConnected.length
+  let ans = 0
+  for (let i = 0; i < x; i++) {
+    /**
+     * 判断代表这个城市自身的 isConnected[i][i] 是否为 1
+     * 这个值初始的时候一定为1，因为城市肯定和自身链接
+     * 为 1 说明我们走过这层城市了，用这个方法来标记是否访问过 
+     * */
+    if (isConnected[i][i] == 1) {
+      ans++
+      dfs(i, isConnected, x)
+    }
+  }
+  return ans
+};
+function dfs(i, isConnected, x) {
+  // 遍历这个城市的关联情况
+  for (let j = 0; j < x; j++) {
+    if (isConnected[i][j] == 1) {
+      if (i == j) {
+        // 来到新的城市要把城市自身标识为0，代表我们访问过
+        isConnected[i][j] = 0
+      } else {
+        // 和别的城市关联，把相关联的都置0
+        isConnected[i][j] = 0
+        isConnected[j][i] = 0
+        // 开始遍历关联的那个城市
+        dfs(j, isConnected, x)
+      }
+    }
+  }
+}
+```
+
+## [130. 被围绕的区域](https://leetcode-cn.com/problems/surrounded-regions/)
+
+给定一个二维的矩阵，包含 `'X'` 和 `'O'`（**字母 O**）。
+
+找到所有被 `'X'` 围绕的区域，并将这些区域里所有的 `'O'` 用 `'X'` 填充。
+
+**示例:**
+
+```
+X X X X
+X O O X
+X X O X
+X O X X
+```
+
+运行你的函数后，矩阵变为：
+
+```
+X X X X
+X X X X
+X X X X
+X O X X
+```
+
+**解释:**
+
+被围绕的区间不会存在于边界上，换句话说，任何边界上的 `'O'` 都不会被填充为 `'X'`。 任何不在边界上，或不与边界上的 `'O'` 相连的 `'O'` 最终都会被填充为 `'X'`。如果两个元素在水平或垂直方向相邻，则称它们是“相连”的。
+
+**题解：**
+
+思路：
+
+由于任何不在边界上，或不与边界上的 `'O'` 相连的 `'O'` 最终都会被填充为 `'X'`。所以我们先在边界上找到所有的 `'0'` ，然后从他们开始做 DFS 
+
+**把这些标记为其他字符，注意不能弄个 set 或者数组存 `[i,j]` 这样的，数组是引用类型，后面你就不好找了。**
+
+最后遍历整个矩阵判断就好。
+
+```js
+/**
+ * @param {character[][]} board
+ * @return {void} Do not return anything, modify board in-place instead.
+ */
+var solve = function (board) {
+  if (!board.length) return
+  let x = board.length, y = board[0].length
+  // 查找边框上的 O
+  // top bottom
+  for (let i = 0; i < y; i++) {
+    if (board[0][i] == 'O') { dfs(0, i, board) }
+    if (board[x - 1][i] == 'O') { dfs(x - 1, i, board) }
+  }
+  // left right
+  for (let i = 0; i < x; i++) {
+    if (board[i][0] == 'O') { dfs(i, 0, board) }
+    if (board[i][y - 1] == 'O') { dfs(i, y - 1, board) }
+  }
+  // loop all
+  for (let i = 0; i < x; i++) {
+    for (let j = 0; j < y; j++) {
+      if (board[i][j] == 'O') {
+        board[i][j] = 'X'
+      }
+      if (board[i][j] == '@') {
+        board[i][j] = 'O'
+      }
+    }
+  }
+
+};
+function dfs(i, j, board) {
+  let x = board.length, y = board[0].length
+  if (i < 0 || i >= x || j < 0 || j >= y || board[i][j] !== 'O') return
+  if (board[i][j] == 'O') {
+    board[i][j] = '@'
+    dfs(i - 1, j, board)
+    dfs(i + 1, j, board)
+    dfs(i, j - 1, board)
+    dfs(i, j + 1, board)
+  }
+}
+```
 
