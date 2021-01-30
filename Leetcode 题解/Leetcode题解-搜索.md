@@ -7,6 +7,7 @@
   - [200. 岛屿数量](#200-岛屿数量)
   - [547. 省份数量](#547-省份数量)
   - [130. 被围绕的区域](#130-被围绕的区域)
+  - [417. 太平洋大西洋水流问题⭐](#417-太平洋大西洋水流问题)
 
 # BFS⭐
 
@@ -635,6 +636,115 @@ function dfs(i, j, board) {
     dfs(i + 1, j, board)
     dfs(i, j - 1, board)
     dfs(i, j + 1, board)
+  }
+}
+```
+
+## [417. 太平洋大西洋水流问题⭐](https://leetcode-cn.com/problems/pacific-atlantic-water-flow/)
+
+给定一个 `m x n` 的非负整数矩阵来表示一片大陆上各个单元格的高度。“太平洋”处于大陆的左边界和上边界，而“大西洋”处于大陆的右边界和下边界。
+
+规定水流只能按照上、下、左、右四个方向流动，且只能从高到低或者在同等高度上流动。
+
+请找出那些水流既可以流动到“太平洋”，又能流动到“大西洋”的陆地单元的坐标。
+
+ 
+
+**提示：**
+
+1. 输出坐标的顺序不重要
+2. *m* 和 *n* 都小于150
+
+ 
+
+**示例：**
+
+```
+给定下面的 5x5 矩阵:
+
+  太平洋 ~   ~   ~   ~   ~ 
+       ~  1   2   2   3  (5) *
+       ~  3   2   3  (4) (4) *
+       ~  2   4  (5)  3   1  *
+       ~ (6) (7)  1   4   5  *
+       ~ (5)  1   1   2   4  *
+          *   *   *   *   * 大西洋
+
+返回:
+
+[[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]] (上图中带括号的单元).
+```
+
+**题解：**
+
+思路：
+
+1. 反向思考，从边界向内靠拢，和 [130. 被围绕的区域](#130-被围绕的区域) 思路很像
+2. 但是注意，我们**只需要在意每个海洋能辐射到的总范围就行，不需要在意最远是哪些个值**（一开始思路走的这个，发现边缘判断很麻烦）
+3. 最后取两个海洋的辐射范围交集就行
+
+**Tips**：这里创建二维数组的方式很好用：
+
+```js
+Array.from({length: x}, () => new Array(y).fill(xxx));
+```
+
+亲测发现比 `new Array -> map(new Array)` 的方式快很多！
+
+```js
+/**
+ * @param {number[][]} matrix
+ * @return {number[][]}
+ */
+var pacificAtlantic = function (matrix) {
+  if (matrix.length == 0) return []
+
+  let ans = []
+  let x = matrix.length
+  let y = matrix[0].length
+
+
+  let daxi = Array.from({length: x}, () => new Array(y).fill(false));
+  let taiping = Array.from({length: x}, () => new Array(y).fill(false));
+
+  //top bottom
+  for (let i = 0; i < y; i++) {
+    dfs(0, i, matrix, taiping)
+    dfs(x - 1, i, matrix, daxi)
+  }
+  //left right
+  for (let i = 0; i < x; i++) {
+    dfs(i, 0, matrix, taiping)
+    dfs(i, y - 1, matrix, daxi)
+  }
+
+  // 比较两个数组的相同值
+  for (let i = 0; i < x; i++) {
+    for (let j = 0; j < y; j++) {
+      if (taiping[i][j] && taiping[i][j] == daxi[i][j]) {
+        ans.push([i, j])
+      }
+    }
+  }
+  return ans
+};
+function dfs(i, j, matrix, arr) {
+  /**
+   * 四个方向的值
+   * 如果已经走过了(true)、越界了、比当前值小，都不用再dfs
+   * 否则，赋值true
+   * dfs
+   */
+  let x = matrix.length, y = matrix[0].length
+  let dirs = [[0, 1], [0, -1], [-1, 0], [1, 0]]
+  if (arr[i][j]) return
+  arr[i][j] = true
+  for (let dir of dirs) {
+    let loopx = i + dir[0]
+    let loopy = j + dir[1]
+
+    if (loopx < 0 || loopx >= x || loopy < 0 || loopy >= y || matrix[i][j] > matrix[loopx][loopy]) continue
+    dfs(loopx, loopy, matrix, arr)
   }
 }
 ```
