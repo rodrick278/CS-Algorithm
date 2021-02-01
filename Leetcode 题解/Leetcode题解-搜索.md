@@ -10,6 +10,7 @@
   - [417. 太平洋大西洋水流问题⭐](#417-太平洋大西洋水流问题)
 - [Backtracking⭐](#Backtracking)
   - [17. 电话号码的字母组合](#17-电话号码的字母组合)
+  - [93. 复原IP地址](#93-复原IP地址)
 
 # BFS⭐
 
@@ -833,5 +834,87 @@ var letterCombinations = function (digits) {
 };
 ```
 
+## [93. 复原IP地址](https://leetcode-cn.com/problems/restore-ip-addresses/)
 
+给定一个只包含数字的字符串，复原它并返回所有可能的 IP 地址格式。
+
+**有效的 IP 地址** 正好由四个整数（每个整数位于 0 到 255 之间组成，且不能含有前导 `0`），整数之间用 `'.' `分隔。
+
+例如："0.1.2.201" 和 "192.168.1.1" 是 **有效的** IP 地址，但是 "0.011.255.245"、"192.168.1.312" 和 "192.168@1.1" 是 **无效的** IP 地址。
+
+**示例 1：**
+
+```
+输入：s = "25525511135"
+输出：["255.255.11.135","255.255.111.35"]
+```
+
+**示例 2：**
+
+```
+输入：s = "0000"
+输出：["0.0.0.0"]
+```
+
+**题解：**
+
+这题的关键：
+
+1. 捋清楚关系树下哪些情况是不要的情况，这些情况我们得“**减枝**，借用一张图说明一下，[来源是这里](https://leetcode-cn.com/problems/restore-ip-addresses/solution/hui-su-suan-fa-hua-tu-fen-xi-jian-zhi-tiao-jian-by/) 
+
+   - 首位是0，但长度非1
+   - 剩余位数过长或者过短
+   - 出范围 [0,255]
+
+   <img src="https://pic.leetcode-cn.com/b581bdde1cef982f0af3182af17fc3c41960c76a7445af0dcfd445c89b4c2eaa-%E3%80%8C%E5%8A%9B%E6%89%A3%E3%80%8D%E7%AC%AC%2093%20%E9%A2%98%EF%BC%9A%E5%A4%8D%E5%8E%9F%20IP%20%E5%9C%B0%E5%9D%80-1.png">
+
+   2. ⭐我们每次传的是数组，和17题不同，数组作为引用类型，每次循环中引用的都是堆中同一个数组，所以我们在 `push` 后传入递归后，需要把刚才传入的值给 `pop()` 
+
+```js
+/**
+ * @param {string} s
+ * @return {string[]}
+ */
+var restoreIpAddresses = function (s) {
+  let ans = []
+
+  dfs([], 0)
+
+  // 传入拼接到目前的str和段数和下标
+  function dfs(ip, i) {
+    // 段数加好再进来,下标也是开始的下标
+    const ipLen = ip.length
+    // 如果段数>4且下标==长度说明正好遍历结束
+    if (ipLen == 4 && i == s.length) {
+      ans.push(ip.join('.'))
+      return
+    }
+    // 如果下标越界或者下标没结束段数>4，就结束
+    if (i >= s.length || (ipLen == 4 && i < s.length)) return
+
+    //开始截取
+    let len = 0
+    while (len++ < 3) {
+      const temp = s.substr(i, len)
+      /**
+       * 这些情况需要放弃这次回溯：
+       * 首位是0，但长度非1
+       * 剩余位数过长或者过短
+       * 超出范围
+       */
+      if ((temp[0] == "0" && temp.length != 1)
+        || (s.length - (i + len) > (4 - (ipLen + 1)) * 3)
+        || (s.length - (i + len) < (4 - (ipLen + 1)) * 1)
+        || +temp > 255) continue
+      // 正常走下去
+      ip.push(temp)
+      dfs(ip, i + len)
+      // 【注意！】每次传完之后，这个ip数组需要把刚才加进去的给减掉，
+      // 不然的话继续循环或者递归这个数组里的值就越来越多了，他们都是引用堆里同一个数组对象ip
+      ip.pop()
+    }
+  }
+  return ans
+};
+```
 
