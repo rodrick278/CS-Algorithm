@@ -8,6 +8,8 @@
   - [547. 省份数量](#547-省份数量)
   - [130. 被围绕的区域](#130-被围绕的区域)
   - [417. 太平洋大西洋水流问题⭐](#417-太平洋大西洋水流问题)
+- [Backtracking⭐](#Backtracking)
+  - [17. 电话号码的字母组合](#17-电话号码的字母组合)
 
 # BFS⭐
 
@@ -748,4 +750,88 @@ function dfs(i, j, matrix, arr) {
   }
 }
 ```
+
+# Backtracking⭐
+Backtracking（回溯）属于 DFS。
+
+- 普通 DFS 主要用在 可达性问题 ，这种问题只需要执行到特点的位置然后返回即可。
+- 而 Backtracking 主要用于求解 排列组合 问题，例如有 { 'a','b','c' } 三个字符，求解所有由这三个字符排列得到的字符串，这种问题在执行到特定的位置返回之后还会继续执行求解过程。
+
+## 17. 电话号码的字母组合
+给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。答案可以按 任意顺序 返回。
+
+给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
+
+<img src="https://assets.leetcode-cn.com/aliyun-lc-upload/original_images/17_telephone_keypad.png" width=25%>
+
+
+**示例 1：**
+
+输入：digits = "23"
+输出：["ad","ae","af","bd","be","bf","cd","ce","cf"]
+
+**示例 2：**
+
+输入：digits = ""
+输出：[]
+
+**示例 3：**
+
+输入：digits = "2"
+输出：["a","b","c"]
+
+
+**提示：**
+
+0 <= digits.length <= 4
+digits[i] 是范围 ['2', '9'] 的一个数字。
+
+**题解：**
+
+思路：
+
+1. 每次传入的参数是当前字母的下标，和递归到当前为止拼出来的字符串（是把整个字符串作为参数传进去） 
+
+2. 当这个字符串拼接到当前下标越界就说明拼完了，填入 ans
+
+```js
+/**
+ * @param {string} digits
+ * @return {string[]}
+ */
+var letterCombinations = function (digits) {
+  if (!digits.length) return []
+  let ans = []
+  let numChar = new Map([
+    ["2", ["a", "b", "c"]], ["3", ["d", "e", "f"]],
+    ["4", ["g", "h", "i"]], ["5", ["j", "k", "l"]], ["6", ["m", "n", "o"]],
+    ["7", ["p", "q", "r", "s"]], ["8", ["t", "u", "v"]], ["9", ["w", "x", "y", "z"]],
+  ])
+  dfs("", 0)
+
+  /**
+   * @description: 
+   * @Author: rodrick
+   * @Date: 2021-02-01 08:52:57
+   * @param {*} char 当前字母组合
+   * @param {*} index 数字下标
+   * @return {*}
+   */
+  function dfs(char, index) {
+    if (index > digits.length - 1) {
+      ans.push(char)
+      return
+    }
+    // 获取 要遍历的字母
+    const chars = numChar.get(digits[index])
+    // 遍历每一个字母，然后让他们都去和后面的每一个数字去对接
+    for (let c of chars) {
+      dfs(char + c, index + 1)
+    }
+  }
+  return ans
+};
+```
+
+
 
