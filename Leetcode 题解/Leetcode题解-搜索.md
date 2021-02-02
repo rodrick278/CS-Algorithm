@@ -880,16 +880,15 @@ var restoreIpAddresses = function (s) {
 
   dfs([], 0)
 
-  // 传入拼接到目前的str和段数和下标
+  // 传入拼接到目前的ipstr和下标
   function dfs(ip, i) {
-    // 段数加好再进来,下标也是开始的下标
     const ipLen = ip.length
-    // 如果段数>4且下标==长度说明正好遍历结束
+    // 如果ip段数==4且下标==长度说明正好遍历结束
     if (ipLen == 4 && i == s.length) {
       ans.push(ip.join('.'))
       return
     }
-    // 如果下标越界或者下标没结束段数>4，就结束
+    // 如果下标越界或者已经四段了但是下标没结束，就结束
     if (i >= s.length || (ipLen == 4 && i < s.length)) return
 
     //开始截取
