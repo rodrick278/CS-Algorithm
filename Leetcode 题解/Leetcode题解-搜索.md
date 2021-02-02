@@ -11,6 +11,7 @@
 - [Backtracking⭐](#Backtracking)
   - [17. 电话号码的字母组合](#17-电话号码的字母组合)
   - [93. 复原IP地址](#93-复原IP地址)
+  - [79. 单词搜索](#79-单词搜索)
 
 # BFS⭐
 
@@ -914,6 +915,90 @@ var restoreIpAddresses = function (s) {
     }
   }
   return ans
+};
+```
+
+## [79. 单词搜索](https://leetcode-cn.com/problems/word-search/)
+
+给定一个二维网格和一个单词，找出该单词是否存在于网格中。
+
+单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。
+
+**示例:**
+
+```
+board =
+[
+  ['A','B','C','E'],
+  ['S','F','C','S'],
+  ['A','D','E','E']
+]
+
+给定 word = "ABCCED", 返回 true
+给定 word = "SEE", 返回 true
+给定 word = "ABCB", 返回 false
+```
+
+**提示：**
+
+- `board` 和 `word` 中只包含大写和小写英文字母。
+- `1 <= board.length <= 200`
+- `1 <= board[i].length <= 200`
+- `1 <= word.length <= 10^3`
+
+**题解：**
+
+典型回溯，记录已经走过的二维数组位置的方法很经典，其他就是套路：判断越界+判断错误值+判断是否走过
+
+然后递归 dfs ，只要有一个成功就返回 true
+
+```js
+/**
+ * @param {character[][]} board
+ * @param {string} word
+ * @return {boolean}
+ */
+var exist = function (board, word) {
+  let x = board.length, y = board[0].length
+  let list = Array.from({ length: x }, () => new Array(y).fill(false))
+
+  for (let i = 0; i < x; i++) {
+    for (let j = 0; j < y; j++) {
+      if (board[i][j] === word[0]) {
+        if (dfs(0, i, j)) {
+          return true
+        }
+      }
+    }
+  }
+  return false
+
+  // 拼接的字符串，目标字符串的下标(已经++，当前最后一个字母坐标
+  function dfs(i, locx, locy) {
+    let res = false
+    // 相等了直接返回true
+    if (i == word.length) return true
+
+    // 越界
+    if (locx < 0 || locx >= x || locy < 0 || locy >= y || i >= word.length) return false
+    // 值不等或者已经存在
+    if (board[locx][locy] != word[i] || list[locx][locy]) return false
+    // 值访问过标记
+    list[locx][locy] = true
+    // 上下左右dfs
+    let arr = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+    for (let temp of arr) {
+      let loopx = locx + temp[0], loopy = locy + temp[1]
+      // dfs
+      let back = dfs(i + 1, loopx, loopy)
+      if (back) {
+        res = true
+        break;
+      }
+    }
+    list[locx][locy] = false
+    return res
+  }
 };
 ```
 
