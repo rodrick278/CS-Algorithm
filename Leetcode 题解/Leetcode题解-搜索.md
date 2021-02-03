@@ -973,7 +973,7 @@ var exist = function (board, word) {
   }
   return false
 
-  // 拼接的字符串，目标字符串的下标(已经++，当前最后一个字母坐标
+  // 拼接的字符串，当前字符串位置的下标，当前最后一个字母坐标
   function dfs(i, locx, locy) {
     let res = false
     // 相等了直接返回true
