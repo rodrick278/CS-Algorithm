@@ -12,6 +12,7 @@
   - [17. 电话号码的字母组合](#17-电话号码的字母组合)
   - [93. 复原IP地址](#93-复原IP地址)
   - [79. 单词搜索](#79-单词搜索)
+  - [257. 二叉树的所有路径](#257-二叉树的所有路径)
 
 # BFS⭐
 
@@ -999,6 +1000,68 @@ var exist = function (board, word) {
     list[locx][locy] = false
     return res
   }
+};
+```
+
+## [257. 二叉树的所有路径](https://leetcode-cn.com/problems/binary-tree-paths/)
+
+给定一个二叉树，返回所有从根节点到叶子节点的路径。
+
+**说明:** 叶子节点是指没有子节点的节点。
+
+**示例:**
+
+```
+输入:
+
+   1
+ /   \
+2     3
+ \
+  5
+
+输出: ["1->2->5", "1->3"]
+
+解释: 所有根节点到叶子节点的路径为: 1->2->5, 1->3
+```
+
+**题解：**
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {string[]}
+ */
+var binaryTreePaths = function (root) {
+  let ans = []
+  if (!root) return []
+  looptree(root, "")
+
+  // 当前树和上一层的值+"->"
+  function looptree(tree, str) {
+    // 保证传进来的 tree 为 true
+    str += tree.val.toString()
+
+    if (!tree.left && !tree.right) {
+      ans.push(str)
+      return
+    }
+    if (tree.left) {
+      looptree(tree.left, str + '->')
+    }
+    if (tree.right) {
+      looptree(tree.right, str + '->')
+    }
+  }
+  return ans
 };
 ```
 
