@@ -13,6 +13,8 @@
   - [93. 复原IP地址](#93-复原IP地址)
   - [79. 单词搜索](#79-单词搜索)
   - [257. 二叉树的所有路径](#257-二叉树的所有路径)
+  - [46. 全排列](#46-全排列)
+  - [47. 全排列 II](#47-全排列-II)
 
 # BFS⭐
 
@@ -1059,6 +1061,134 @@ var binaryTreePaths = function (root) {
     }
     if (tree.right) {
       looptree(tree.right, str + '->')
+    }
+  }
+  return ans
+};
+```
+
+## [46. 全排列](https://leetcode-cn.com/problems/permutations/)
+
+给定一个 **没有重复** 数字的序列，返回其所有可能的全排列。
+
+**示例:**
+
+```
+输入: [1,2,3]
+输出:
+[
+  [1,2,3],
+  [1,3,2],
+  [2,1,3],
+  [2,3,1],
+  [3,1,2],
+  [3,2,1]
+]
+```
+
+**题解：**
+
+```js
+/**
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+var permute = function (nums) {
+  /**
+   * 唯一需要注意的是这里用了个use作为判断依据而不是用
+   * arr.includes(num)
+   * 是因为includes时间复杂度O(n)，
+   * 用对象相当于我们用空间换时间
+   */
+  let ans = []
+  let use = {}
+  dfs([])
+
+  function dfs(arr) {
+    if (arr.length == nums.length) {
+      ans.push(arr.slice(0))
+    }
+
+    for (let num of nums) {
+      if (!use[num]) {
+        arr.push(num)
+        use[num] = true
+        dfs(arr)
+        arr.pop()
+        use[num] = false
+      }
+    }
+  }
+  return ans
+};
+```
+
+## [47. 全排列 II](https://leetcode-cn.com/problems/permutations-ii/)
+
+给定一个可包含重复数字的序列 `nums` ，**按任意顺序** 返回所有不重复的全排列。
+
+**示例 1：**
+
+```
+输入：nums = [1,1,2]
+输出：
+[[1,1,2],
+ [1,2,1],
+ [2,1,1]]
+```
+
+**题解：**
+
+和上面一题不一样的关键点在于，`nums` 是有重复的，然后我们在选取的时候，需要“剪枝”，为了方便，我们**必须要先进行==排序==，让相同的值放在一起**
+
+剪枝的方法主要是：
+
+- 【A】如果上层用过了，pass
+- 【B】前一个数和当前数相同且未被上层用过，那么前一个数**要么已经被这轮选中，要么前N个相同数都因为同原因被pass**
+
+这样剪完之后剩下两种情况：
+
+1. 和前一个值相同但是前一个值上层用过,所以前一个值在【A】已经被pass，所以可用
+
+2. 和前一个值不同，且上层也没用过，所以可用
+
+参考图解，[来源 - LeetCode](https://leetcode-cn.com/problems/permutations-ii/solution/shou-hua-tu-jie-li-yong-yue-shu-tiao-jian-chong-fe/)
+
+<img src="https://pic.leetcode-cn.com/1600389760-qBZfUD-image.png" width=80%>
+
+```js
+/**
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+var permuteUnique = function (nums) {
+  let ans = []
+  let use = new Map()
+  // 很关键的排序
+  nums.sort((a, b) => a - b)
+  dfs([])
+
+  function dfs(arr) {
+    // 长度相同就结束
+    if (arr.length == nums.length) {
+      ans.push(arr.slice())
+      return
+    }
+		
+    for (let i in nums) {
+      // 【A】如果上层用过了，pass
+      if (use.get(i)) continue
+      // 【B】前一个数和当前数相同且未被上层用过，那么前一个数要么已经被这轮选中，要么前N个相同数都因为同原因被pass
+      // 注意，map的get的key是字符串
+      if (nums[i - 1] == nums[i] && !use.get(i - 1+"")) continue
+      // 剩下的情况就只有
+      // 1. 和前一个值相同但是前一个值上层用过,所以前一个值在【A】已经被pass，所以可用
+      // 2. 和前一个值不同，且上层也没用过，所以可用
+      use.set(i, true)
+      arr.push(nums[i])
+      dfs(arr)
+      arr.pop()
+      use.set(i, false)
     }
   }
   return ans
