@@ -15,6 +15,8 @@
   - [257. 二叉树的所有路径](#257-二叉树的所有路径)
   - [46. 全排列](#46-全排列)
   - [47. 全排列 II](#47-全排列-II)
+  - [77. 组合](#77-组合)
+  - [39. 组合总和](#39-组合总和)
 
 # BFS⭐
 
@@ -1189,6 +1191,118 @@ var permuteUnique = function (nums) {
       dfs(arr)
       arr.pop()
       use.set(i, false)
+    }
+  }
+  return ans
+};
+```
+
+## [77. 组合](https://leetcode-cn.com/problems/combinations/)
+
+给定两个整数 *n* 和 *k*，返回 1 ... *n* 中所有可能的 *k* 个数的组合。
+
+**示例:**
+
+```
+输入: n = 4, k = 2
+输出:
+[
+  [2,4],
+  [3,4],
+  [2,3],
+  [1,2],
+  [1,3],
+  [1,4],
+]
+```
+
+**题解：**
+
+```js
+/**
+ * @param {number} n
+ * @param {number} k
+ * @return {number[][]}
+ */
+var combine = function (n, k) {
+  let ans = []
+
+  dfs([])
+
+  function dfs(arr) {
+    if (arr.length == k) {
+      ans.push(arr.slice())
+      return
+    }
+    let len = arr.length
+    // num 直接从数组最后一位数+1开始遍历，相当于前面的剪枝，因为后面的数一定大于前面并且都是+1关系
+    for (let num = arr.length ? arr[len - 1] + 1 : 1; num <= n; num++) {
+      // 当前数组+剩余数字长度不足时，直接结束循环，不用浪费时间遍历到最后才发现可用数字不够了
+      if (len + (n - num + 1) < k) {
+        break;
+      }
+      arr.push(num)
+      dfs(arr)
+      arr.pop()
+    }
+  }
+
+  return ans
+};
+```
+
+## [39. 组合总和](https://leetcode-cn.com/problems/combination-sum/)
+
+给定一个**无重复元素**的数组 `candidates` 和一个目标数 `target` ，找出 `candidates` 中所有可以使数字和为 `target` 的组合。
+
+`candidates` 中的数字可以无限制重复被选取。
+
+**说明：**
+
+- 所有数字（包括 `target`）都是正整数。
+- 解集不能包含重复的组合。 
+
+**示例 1：**
+
+```
+输入：candidates = [2,6,3,7], target = 7,
+所求解集为：
+[
+  [7],
+  [2,2,3]
+]
+```
+
+**题解：**
+
+```js
+/**
+ * @param {number[]} candidates
+ * @param {number} target
+ * @return {number[][]}
+ */
+var combinationSum = function (candidates, target) {
+  let ans = []
+  // 需要排序
+  candidates.sort((a, b) => a - b)
+  dfs([], 0, 0)
+
+  function dfs(arr, sum, index) {
+    // 相等了 push
+    if (sum == target) {
+      ans.push(arr.slice())
+      return
+    }
+
+    for (let i = index; i < candidates.length; i++) {
+      // 如果 sum+当前number>target，那么后续的循环都不用做了【前提条件是我们是排好序的】
+      if (sum + candidates[i] > target) {
+        break;
+      }
+
+      arr.push(candidates[i])
+      dfs(arr, sum + candidates[i], i)
+      arr.pop()
     }
   }
   return ans
