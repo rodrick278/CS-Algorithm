@@ -17,6 +17,7 @@
   - [47. 全排列 II](#47-全排列-II)
   - [77. 组合](#77-组合)
   - [39. 组合总和](#39-组合总和)
+  - [40. 组合总和 II](#40-组合总和-II)
 
 # BFS⭐
 
@@ -1309,3 +1310,71 @@ var combinationSum = function (candidates, target) {
 };
 ```
 
+## 40. 组合总和 II
+
+给定一个数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+
+candidates 中的每个数字在每个组合中只能使用一次。
+
+**说明：**
+
+所有数字（包括目标数）都是正整数。
+解集不能包含重复的组合。 
+
+**示例 1:**
+
+输入: candidates = [10,1,2,7,6,1,5], target = 8,
+所求解集为:
+[
+  [1, 7],
+  [1, 2, 5],
+  [2, 6],
+  [1, 1, 6]
+]
+
+**题解：**
+
+```js
+/**
+ * @param {number[]} candidates
+ * @param {number} target
+ * @return {number[][]}
+ */
+var combinationSum2 = function (candidates, target) {
+  candidates.sort((a, b) => a - b)
+  let ans = []
+  let use = new Map()
+  dfs([], 0, 0)
+  /**
+   * @description: 
+   * @Author: rodrick
+   * @Date: 2021-02-06 22:10:09
+   * @param {*} arr 当前数组
+   * @param {*} sum 总和
+   * @param {*} index 下一位数的下标
+   */
+  function dfs(arr, sum, index) {
+    if (sum == target) {
+      ans.push(arr.slice())
+      return
+    }
+
+    for (let i = index; i < candidates.length; i++) {
+      /** 如果前面一个数(i-1)被用过，那么当前的i肯定可以用，是新的组合
+       *  如果i的值和前面一个数(i-1)值一样且i-1没被用过，那么他(i-1)为什么没被用？
+       *  因为假设数组[1, 1, 1, 1], 其中index = 0的“1”是被用过的，那么index = 1的一定是可用的，【同层中】index > 1的如果再用就会产生重复结果
+       */
+      if (candidates[i - 1] == candidates[i] && !use.get(i - 1)) continue;
+      // 如果加了这个值后比目标大，直接break结束循环
+      if (sum + candidates[i] > target) break;
+
+      use.set(i, true)
+      arr.push(candidates[i])
+      dfs(arr, sum + candidates[i], i + 1)
+      arr.pop()
+      use.set(i, false)
+    }
+  }
+  return ans
+};
+```
