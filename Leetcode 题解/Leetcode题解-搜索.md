@@ -18,6 +18,8 @@
   - [77. 组合](#77-组合)
   - [39. 组合总和](#39-组合总和)
   - [40. 组合总和 II](#40-组合总和-II)
+  - [216. 组合总和 III](#216-组合总和-III)
+  - [78. 子集](#78-子集)
 
 # BFS⭐
 
@@ -1310,7 +1312,7 @@ var combinationSum = function (candidates, target) {
 };
 ```
 
-## 40. 组合总和 II
+## [40. 组合总和 II](https://leetcode-cn.com/problems/combination-sum-ii/)
 
 给定一个数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
 
@@ -1323,6 +1325,7 @@ candidates 中的每个数字在每个组合中只能使用一次。
 
 **示例 1:**
 
+```
 输入: candidates = [10,1,2,7,6,1,5], target = 8,
 所求解集为:
 [
@@ -1331,6 +1334,8 @@ candidates 中的每个数字在每个组合中只能使用一次。
   [2, 6],
   [1, 1, 6]
 ]
+```
+
 
 **题解：**
 
@@ -1374,6 +1379,96 @@ var combinationSum2 = function (candidates, target) {
       arr.pop()
       use.set(i, false)
     }
+  }
+  return ans
+};
+```
+
+## [216. 组合总和 III](https://leetcode-cn.com/problems/combination-sum-iii/)
+
+找出所有相加之和为 n 的 k 个数的组合。组合中只允许含有 1 - 9 的正整数，并且每种组合中不存在重复的数字。
+
+**说明：**
+
+所有数字都是正整数。
+解集不能包含重复的组合。 
+
+**示例 1:**
+
+```
+输入: 
+k = 3, n = 7
+
+输出: 
+[[1,2,4]]
+```
+
+**题解：**
+
+```js
+/**
+ * @param {number} k
+ * @param {number} n
+ * @return {number[][]}
+ */
+var combinationSum3 = function (k, n) {
+  let ans = []
+
+  dfs([], 1, 0)
+  function dfs(arr, num, sum) {
+    if (sum == n && arr.length == k) {
+      ans.push(arr.slice())
+      return
+    }
+
+    if (sum > n || num > 9 || arr.length >= k) {
+      return
+    }
+
+    for (let i = num; i <= 9; i++) {
+      arr.push(i)
+      dfs(arr, i + 1, sum + i)
+      arr.pop()
+    }
+  }
+  return ans
+};
+```
+
+## [78. 子集](https://leetcode-cn.com/problems/subsets/)
+
+给你一个整数数组 nums ，数组中的元素 互不相同 。返回该数组所有可能的子集（幂集）。
+
+解集 不能 包含重复的子集。你可以按 任意顺序 返回解集。
+
+**示例 1：**
+
+```
+输入：nums = [1,2,3]
+输出：[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
+```
+
+**题解：**
+```js
+/**
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+var subsets = function (nums) {
+  let ans = []
+  dfs([], 0)
+
+  function dfs(arr, index) {
+    ans.push(arr.slice())
+
+    if (index > nums.length - 1) return
+
+    for (let i = index; i <= nums.length - 1; i++) {
+      arr.push(nums[i])
+      dfs(arr, i + 1)
+      arr.pop()
+    }
+
   }
   return ans
 };
