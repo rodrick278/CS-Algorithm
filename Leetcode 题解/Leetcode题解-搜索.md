@@ -20,6 +20,8 @@
   - [40. 组合总和 II](#40-组合总和-II)
   - [216. 组合总和 III](#216-组合总和-III)
   - [78. 子集](#78-子集)
+  - [90. 子集 II](#90-子集-II)
+  - [131. 分割回文串](#131-分割回文串)
 
 # BFS⭐
 
@@ -1473,3 +1475,124 @@ var subsets = function (nums) {
   return ans
 };
 ```
+
+## [90. 子集 II](https://leetcode-cn.com/problems/subsets-ii/)
+
+给定一个可能包含重复元素的整数数组 ***nums***，返回该数组所有可能的子集（幂集）。
+
+**说明：**解集不能包含重复的子集。
+
+**示例:**
+
+```
+输入: [1,2,2]
+输出:
+[
+  [2],
+  [1],
+  [1,2,2],
+  [2,2],
+  [1,2],
+  []
+]
+```
+
+**题解：**
+
+```js
+/**
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+var subsetsWithDup = function (nums) {
+  let ans = []
+  nums.sort((a, b) => a - b)
+  let use = new Set()
+
+  dfs([], 0)
+
+  function dfs(arr, index) {
+    ans.push(arr.slice())
+
+    for (let i = index; i <= nums.length - 1; i++) {
+
+      if (nums[i - 1] !== nums[i]
+        || (nums[i - 1] === nums[i] && use.has(nums[i]))) {
+        use.add(nums[i])
+        arr.push(nums[i])
+        dfs(arr, i + 1)
+        use.delete(nums[i])
+        arr.pop()
+      }
+    }
+  }
+  return ans
+};
+```
+
+## [131. 分割回文串](https://leetcode-cn.com/problems/palindrome-partitioning/)
+
+给定一个字符串 *s*，将 *s* 分割成一些子串，使每个子串都是回文串。
+
+返回 *s* 所有可能的分割方案。
+
+**示例:**
+
+```
+输入: "aab"
+输出:
+[
+  ["aa","b"],
+  ["a","a","b"]
+]
+```
+
+**题解：**
+
+思路：正常的回溯思路，在判断回文字符串的时候方式多样，我选择的是判断每次切割下来的字符串是否是回文
+
+```
+aab => 切下来 a，是回文 => 接下来切出来 a，是回文 => 接下来切出来 b，是回文 => 得到 [a,a,b]
+											=> index+1 切出来 ab 不是回文 continue => 数组切完结束，没有结果
+		=> index+1 切下来 aa 是回文 continue => 切出来 b 是回文，得到 [aa,b]
+    => index+1 切下来 aab 不是回文 continue => 切完了，没有结果
+```
+
+```js
+/**
+ * @param {string} s
+ * @return {string[][]}
+ */
+var partition = function (s) {
+  let ans = []
+
+  dfs([], 0)
+  function dfs(arr, index) {
+    if (index === s.length) {
+      ans.push(arr.slice())
+    }
+
+    for (let i = index; i <= s.length-1; i++) {
+      const tempStr = s.substring(index, i + 1)
+      if (!isPal(tempStr)) continue;
+
+      arr.push(tempStr)
+      dfs(arr, i + 1)
+      arr.pop()
+    }
+  }
+  return ans
+};
+function isPal(s) {
+  let l = 0, r = s.length - 1
+  while (l < r) {
+    if (s[l] !== s[r]) return false
+    l++
+    r--
+  }
+  return true
+}
+```
+
+
+
