@@ -22,6 +22,8 @@
   - [78. 子集](#78-子集)
   - [90. 子集 II](#90-子集-II)
   - [131. 分割回文串](#131-分割回文串)
+  - [37. 解数独](#37-解数独)
+  - [51. N 皇后](#51-N-皇后)
 
 # BFS⭐
 
@@ -769,7 +771,8 @@ Backtracking（回溯）属于 DFS。
 - 普通 DFS 主要用在 可达性问题 ，这种问题只需要执行到特点的位置然后返回即可。
 - 而 Backtracking 主要用于求解 排列组合 问题，例如有 { 'a','b','c' } 三个字符，求解所有由这三个字符排列得到的字符串，这种问题在执行到特定的位置返回之后还会继续执行求解过程。
 
-## 17. 电话号码的字母组合
+## [17. 电话号码的字母组合](https://leetcode-cn.com/problems/letter-combinations-of-a-phone-number/)
+
 给定一个仅包含数字 2-9 的字符串，返回所有它能表示的字母组合。答案可以按 任意顺序 返回。
 
 给出数字到字母的映射如下（与电话按键相同）。注意 1 不对应任何字母。
@@ -1553,8 +1556,8 @@ var subsetsWithDup = function (nums) {
 
 ```
 aab => 切下来 a，是回文 => 接下来切出来 a，是回文 => 接下来切出来 b，是回文 => 得到 [a,a,b]
-											=> index+1 切出来 ab 不是回文 continue => 数组切完结束，没有结果
-		=> index+1 切下来 aa 是回文 continue => 切出来 b 是回文，得到 [aa,b]
+					   => index+1 切出来 ab 不是回文 continue => 数组切完结束，没有结果
+	=> index+1 切下来 aa 是回文 continue => 切出来 b 是回文，得到 [aa,b]
     => index+1 切下来 aab 不是回文 continue => 切完了，没有结果
 ```
 
@@ -1594,5 +1597,177 @@ function isPal(s) {
 }
 ```
 
+## [37. 解数独](https://leetcode-cn.com/problems/sudoku-solver/)
 
+编写一个程序，通过填充空格来解决数独问题。
+
+一个数独的解法需**遵循如下规则**：
+
+1. 数字 `1-9` 在每一行只能出现一次。
+2. 数字 `1-9` 在每一列只能出现一次。
+3. 数字 `1-9` 在每一个以粗实线分隔的 `3x3` 宫内只能出现一次。
+
+空白格用 `'.'` 表示。
+
+**题解：**
+
+思路：
+
+- **判断是否冲突**
+  1. 行列是否有存在的值
+  2. 所在 3x3 的格子里是否有存在的值
+  3. 3x3 的格子起点只有 0 3 6 三种，用 `Math.floor(x / 3) * 3` 计算
+- **填数逻辑**
+  1. 先判断是否越界（行列超过 8 ）
+  2. 判断是否可填（等于 `.`），如果不可填那么直接递归下一个值【下一个值直接 `y+1` ，不用关心越界，因为步骤 1 进行了处理】
+  3. 可填的情况下，循环 1-9：
+     1. 先判断当前数是否冲突，冲突则 continue
+     2. 不冲突的话填入，然后直接递归下一个值（`y+1`）是否能构成数独，如果可以，直接返回 `true` ，不走步骤 3，这样保证 `board` 不会被修改。
+     3. 如果步骤 2 的下一个值递归不能构成数独，那么把当前值重置为 `.` 
+
+```js
+/**
+ * @param {character[][]} board
+ * @return {void} Do not return anything, modify board in-place instead.
+ */
+const solveSudoku = (board) => {
+  fill(0, 0)
+  function fill(x, y) {
+    // 判断越界情况
+    // 如果列超出了就加行，如果行也超出去了说明填完了
+    if (y == 9) {
+      x++
+      y = 0
+      if (x == 9) return true
+    }
+
+    //判断是不是需要填的格子
+    if (board[x][y] !== '.') return fill(x, y + 1)
+
+    // 正常填
+    for (let num = 1; num <= 9; num++) {
+      // 如果有冲突 填写下一个数
+      if (hasConflit(x, y, num.toString())) continue
+      // 没冲突，填进去
+      board[x][y] = num.toString()
+      // 看看后面一个值可不可以做完数独，如果可以做完数独，则返回true，就没有改回”.“的机会了
+      if (fill(x, y + 1)) return true
+      // 不能完成数独，改回"." ，然后继续循环
+      board[x][y] = "."
+    }
+    // 如果循环完了九个数字都不能完成数独，那么才返回 false
+    return false
+  }
+  function hasConflit(x, y, num) {
+    // 判断行列是否有冲突
+    for (let i = 0; i <= 8; i++) {
+      if (board[x][i] === num || board[i][y] === num) return true
+    }
+    // 判断3x3的格子里有没有冲突
+    // 取所在3x3的格子的起点，起点只有 0 3 6
+    const inX = Math.floor(x / 3) * 3
+    const inY = Math.floor(y / 3) * 3
+    for (let i = inX; i < inX + 3; i++) {
+      for (let j = inY; j < inY + 3; j++) {
+        if (board[i][j] === num) return true
+      }
+    }
+    return false
+  };
+}
+```
+
+## [51. N 皇后](https://leetcode-cn.com/problems/n-queens/)
+
+**n 皇后问题** 研究的是如何将 `n` 个皇后放置在 `n×n` 的棋盘上，并且使皇后彼此之间不能相互攻击。
+
+给你一个整数 `n` ，返回所有不同的 **n 皇后问题** 的解决方案。
+
+每一种解法包含一个不同的 **n 皇后问题** 的棋子放置方案，该方案中 `'Q'` 和 `'.'` 分别代表了皇后和空位。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2020/11/13/queens.jpg)
+
+```
+输入：n = 4
+输出：[[".Q..","...Q","Q...","..Q."],["..Q.","Q...","...Q",".Q.."]]
+解释：如上图所示，4 皇后问题存在两个不同的解法。
+```
+
+**示例 2：**
+
+```
+输入：n = 1
+输出：[["Q"]]
+```
+
+ 
+
+**提示：**
+
+- `1 <= n <= 9`
+- 皇后彼此不能相互攻击，也就是说：任何两个皇后都不能处于同一条横行、纵行或斜线上。
+
+**题解：**
+
+和数独差不多，注意的是 line 42 这里直接过就好了不需要有什么判断。
+
+判定那里注意两点
+
+1. 行只需要判断到当前行的上面一行，因为当前行之下（包括当前行）一定是空的
+2. 注意对角线的判断技巧 `i - j === x - y || i + j === x + y`
+
+```js
+/**
+ * @param {number} n
+ * @return {string[][]}
+ */
+var solveNQueens = function (n) {
+  const ans = []
+  // 初始化一个数组用来存放过程值
+  const board = Array.from({ length: n }, () => new Array(n).fill('.'))
+
+  const hasQ = (x, y) => {
+    // 判断列上和对角是否有（行肯定没有）
+    // 行只需要查找当前行之前的就行，因为之后的行都是空的
+    for (let i = 0; i < x; i++) {
+      for (let j = 0; j < n; j++) {
+        // 注意这里的对角线技巧
+        if (board[i][j] === "Q" &&
+          (j === y || i - j === x - y || i + j === x + y)) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
+  const fill = (x) => {
+    // 结束，将结果 board 处理后放入进 ans，能走到这一步的一定是满足条件的，否则都在line38被pass了
+    if (x == n) {
+      const arr = []
+      board.forEach(line => {
+        arr.push(line.join(''))
+      })
+      ans.push(arr)
+    }
+
+    // 判断当前行每个位置是否可填
+    for (let i = 0; i < n; i++) {
+      // 不可填 继续
+      if (hasQ(x, i)) continue
+      // 否则，填上
+      board[x][i] = "Q"
+      // 下一行
+      fill(x + 1)
+      board[x][i] = '.'
+    }
+  }
+  fill(0)
+  return ans
+};
+```
 
