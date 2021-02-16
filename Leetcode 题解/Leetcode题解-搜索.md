@@ -88,13 +88,6 @@
 因为这八个方向不管有多少个为 0 的位置，他们都只能取一个，也就是 `res++` 
 
 ```js
-/*
- * @lc app=leetcode.cn id=1091 lang=javascript
- *
- * [1091] 二进制矩阵中的最短路径
- */
-
-// @lc code=start
 /**
  * @param {number[][]} grid
  * @return {number}
@@ -179,18 +172,11 @@ var shortestPathBinaryMatrix = function (grid) {
 
 因为每减一次，不管你减多少，都肯定减去了一个平方数，**level 就是减了几次平方数的次数**。
 
-下图每两个 step 中间就相当于我们的 level，step2 的 3 是 `7-1` ，图上画错了
+下图每两个 step 中间就相当于我们的 level，step2 的 3 是 `7-4` ，图上画错了
 
 <img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9waWMubGVldGNvZGUtY24uY29tL0ZpZ3VyZXMvMjc5LzI3OV9ncmVlZHlfYmZzLnBuZw?x-oss-process=image/format,png" width=80%>
 
 ```js
-/*
- * @lc app=leetcode.cn id=279 lang=javascript
- *
- * [279] 完全平方数
- */
-
-// @lc code=start
 /**
  * @param {number} n
  * @return {number}

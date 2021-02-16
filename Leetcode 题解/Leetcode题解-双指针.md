@@ -46,13 +46,6 @@
 **题解：**
 
 ```js
-/*
- * @lc app=leetcode.cn id=167 lang=javascript
- *
- * [167] 两数之和 II - 输入有序数组
- */
-
-// @lc code=start
 /**
  * @param {number[]} numbers
  * @param {number} target
@@ -228,13 +221,6 @@ var reverseVowels = function (s) {
 **题解：**
 
 ```js
-/*
- * @lc app=leetcode.cn id=680 lang=javascript
- *
- * [680] 验证回文字符串 Ⅱ
- */
-
-// @lc code=start
 /**
  * @param {string} s
  * @return {boolean}
@@ -436,13 +422,6 @@ nums2 = [2,5,6],       n = 3
 **题解：**
 
 ```js
-/*
- * @lc app=leetcode.cn id=141 lang=javascript
- *
- * [141] 环形链表
- */
-
-// @lc code=start
 /**
  * Definition for singly-linked list.
  * function ListNode(val) {
