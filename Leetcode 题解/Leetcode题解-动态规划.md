@@ -221,7 +221,7 @@ var rob = function (nums) {
 };
 ```
 
-## [信封错排⭐](https://blog.csdn.net/qq_35629054/article/details/111124819)
+## [信封错排⭐](https://www.cnblogs.com/buptleida/p/13229545.html)
 
 假设有5封信放入5个信箱，问：有多少种方案是5个信封全部没有放入对应的信箱中
 如：[1,2,3] 有两种方案：[2,3,1] [3,1,2]
