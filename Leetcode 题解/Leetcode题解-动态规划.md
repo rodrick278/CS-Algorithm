@@ -5,6 +5,13 @@
   - [213. 打家劫舍 II](#213-打家劫舍-II)
   - [信封错排⭐](#信封错排)
   
+- [矩阵路径](#矩阵路径)
+
+  - [64. 最小路径和](#64-最小路径和)
+  - [62. 不同路径](#62-不同路径)
+
+- [数组区间](#数组区间)
+
   
 
 # 斐波那契数列
@@ -252,3 +259,124 @@ var findDerangement = function (n) {
 console.log(findDerangement(3))
 ```
 
+# 矩阵路径
+
+## [64. 最小路径和](https://leetcode-cn.com/problems/minimum-path-sum/)
+
+给定一个包含非负整数的 `*m* x *n*` 网格 `grid` ，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。
+
+**说明：**每次只能向下或者向右移动一步。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2020/11/05/minpath.jpg)
+
+```
+输入：grid = [[1,3,1],[1,5,1],[4,2,1]]
+输出：7
+解释：因为路径 1→3→1→1→1 的总和最小。
+```
+
+**示例 2：**
+
+```
+输入：grid = [[1,2,3],[4,5,6]]
+输出：12
+```
+
+ 
+
+**提示：**
+
+- `m == grid.length`
+- `n == grid[i].length`
+- `1 <= m, n <= 200`
+- `0 <= grid[i][j] <= 100`
+
+**题解：**
+
+到每个格子，都只能从上面或者左面进来
+
+但是第一行和第一列特殊，他们一个只能从左边进一个只能从上面进
+
+为了避免越界等情况，我们可以先把第一行和第一列的全部先算出来，然后再遍历其他值，grid 的每个格子的值都变成到当前格子的最短路径长度
+
+```js
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
+var minPathSum = function (grid) {
+  // m 列 n 行
+  let m = grid[0].length, n = grid.length
+  // “到”每个格子，都只能从上面或者左面进来
+  // 但是第一行和第一列特殊，他们一个只能从左边进一个只能从上面进
+  // 计算第一行
+  for (let i = 1; i < m; i++) {
+    grid[0][i] += grid[0][i - 1] 
+  }
+  // 计算第一列
+  for (let i = 1; i < n; i++) {
+    grid[i][0] += grid[i - 1][0] 
+  }
+  // 现在开始循环其他的值
+  for (let x = 1; x < n; x++) {
+    for (let y = 1; y < m; y++) {
+      grid[x][y] += Math.min(grid[x - 1][y], grid[x][y - 1])
+    }
+  }
+  return grid[n - 1][m - 1]
+};
+```
+
+## [62. 不同路径](https://leetcode-cn.com/problems/unique-paths/)
+
+一个机器人位于一个 `m x n` 网格的左上角 （起始点在下图中标记为 “Start” ）。
+
+机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角（在下图中标记为 “Finish” ）。
+
+问总共有多少条不同的路径？
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2018/10/22/robot_maze.png)
+
+```
+输入：m = 3, n = 7
+输出：28
+```
+
+**题解：**
+
+```js
+/**
+ * @param {number} m
+ * @param {number} n
+ * @return {number}
+ */
+var uniquePaths = function (m, n) {
+  let dp = Array.from({ length: n }, () => new Array(m))
+  dp[0][0] = 1
+  for (let i = 1; i < m; i++) {
+    dp[0][i] = 1
+  }
+
+  for (let i = 1; i < n; i++) {
+    dp[i][0] = 1
+  }
+
+  for (let x = 1; x < n; x++) {
+    for (let y = 1; y < m; y++) {
+      dp[x][y] = dp[x][y - 1] + dp[x - 1][y]
+    }
+  }
+
+  return dp[n - 1][m - 1]
+};
+```
+
+# 数组区间
