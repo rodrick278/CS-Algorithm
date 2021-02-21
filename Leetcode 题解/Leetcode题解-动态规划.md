@@ -12,6 +12,9 @@
 
 - [数组区间](#数组区间)
 
+  - [303. 区域和检索 - 数组不可变](#303-区域和检索--数组不可变)
+  - [413. 等差数列划分](#413-等差数列划分)
+  
   
 
 # 斐波那契数列
@@ -380,3 +383,140 @@ var uniquePaths = function (m, n) {
 ```
 
 # 数组区间
+
+## [303. 区域和检索 - 数组不可变](https://leetcode-cn.com/problems/range-sum-query-immutable/)
+
+给定一个整数数组  `nums`，求出数组从索引 `i` 到 `j`*（*`i ≤ j`）范围内元素的总和，包含 `i`、`j `两点。
+
+实现 `NumArray` 类：
+
+- `NumArray(int[] nums)` 使用数组 `nums` 初始化对象
+- `int sumRange(int i, int j)` 返回数组 `nums` 从索引 `i` 到 `j`*（*`i ≤ j`）范围内元素的总和，包含 `i`、`j `两点（也就是 `sum(nums[i], nums[i + 1], ... , nums[j])`）
+
+ 
+
+**示例：**
+
+```
+输入：
+["NumArray", "sumRange", "sumRange", "sumRange"]
+[[[-2, 0, 3, -5, 2, -1]], [0, 2], [2, 5], [0, 5]]
+输出：
+[null, 1, -1, -3]
+
+解释：
+NumArray numArray = new NumArray([-2, 0, 3, -5, 2, -1]);
+numArray.sumRange(0, 2); // return 1 ((-2) + 0 + 3)
+numArray.sumRange(2, 5); // return -1 (3 + (-5) + 2 + (-1)) 
+numArray.sumRange(0, 5); // return -3 ((-2) + 0 + 3 + (-5) + 2 + (-1))
+```
+
+**题解：**
+
+1. dp 在构造函数中做，这样不用每次调用 `sumRange` 都处理
+2. 假设 `nums:[1,2,3,4]` ，那么 `dp:[1,2,6,10]` ，求区间就是个差值 `this.dp[j] - this.dp[i - 1])`，注意一下 下标 0 就行
+
+```js
+/**
+ * @param {number[]} nums
+ */
+var NumArray = function (nums) {
+  const dp = []
+  dp[0] = nums[0]
+
+  for (let i = 1; i <= nums.length - 1; i++) {
+    dp[i] = dp[i - 1] + nums[i]
+  }
+  this.dp = dp
+};
+
+/** 
+ * @param {number} i 
+ * @param {number} j
+ * @return {number}
+ */
+NumArray.prototype.sumRange = function (i, j) {
+  return this.dp[j] - (i == 0 ? 0 : this.dp[i - 1])
+};
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * var obj = new NumArray(nums)
+ * var param_1 = obj.sumRange(i,j)
+ */
+```
+
+## [413. 等差数列划分](https://leetcode-cn.com/problems/arithmetic-slices/)
+
+如果一个数列至少有三个元素，并且任意两个相邻元素之差相同，则称该数列为等差数列。
+
+例如，以下数列为等差数列:
+
+```
+1, 3, 5, 7, 9
+7, 7, 7, 7
+3, -1, -5, -9
+```
+
+以下数列不是等差数列。
+
+```
+1, 1, 2, 5, 7
+```
+
+ 
+
+数组 A 包含 N 个数，且索引从0开始。数组 A 的一个子数组划分为数组 (P, Q)，P 与 Q 是整数且满足 0<=P<Q<N 。
+
+如果满足以下条件，则称子数组(P, Q)为等差数组：
+
+元素 A[P], A[p + 1], ..., A[Q - 1], A[Q] 是等差的。并且 P + 1 < Q 。
+
+函数要返回数组 A 中所有为等差数组的子数组个数。
+
+**题解：**
+
+dp 存到每个位置为止的等差数列数量，更像是找规律题
+
+可以用常数优化
+
+**DP**
+
+```js
+/**
+ * @param {number[]} A
+ * @return {number}
+ */
+var numberOfArithmeticSlices = function (A) {
+  if(!A.length) return 0
+  const dp = []
+  dp[0] = dp[1] = 0
+  for (let i = 2; i < A.length; i++) {
+    let count = dp[i - 1]
+    let j = i
+    while (A[j] - A[j - 1] === A[j - 1] - A[j - 2]) {
+      count++
+      j--
+    }
+    dp[i] = count
+  }
+  return dp[A.length - 1]
+};
+```
+
+**优化为常数**
+
+```js
+var numberOfArithmeticSlices = function (A) {
+  let ans = 0
+  for (let i = 2; i < A.length; i++) {
+    let j = i
+    while (A[j] - A[j - 1] === A[j - 1] - A[j - 2]) {
+      ans++
+      j--
+    }
+  }
+  return ans
+};
+```
+
