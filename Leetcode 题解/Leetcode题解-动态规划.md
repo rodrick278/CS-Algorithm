@@ -15,6 +15,10 @@
   - [303. 区域和检索 - 数组不可变](#303-区域和检索---数组不可变)
   - [413. 等差数列划分](#413-等差数列划分)
   
+- [其他](#其他)
+
+  - [53. 最大子序和](#53-最大子序和)
+
   
 
 # 斐波那契数列
@@ -515,6 +519,60 @@ var numberOfArithmeticSlices = function (A) {
       ans++
       j--
     }
+  }
+  return ans
+};
+```
+
+
+
+
+
+# 其他
+
+### [53. 最大子序和](https://leetcode-cn.com/problems/maximum-subarray/)
+
+给定一个整数数组 `nums` ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+
+**示例 1：**
+
+```
+输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
+输出：6
+解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
+```
+
+**题解：**
+
+`dp` 每一位是到当前位置的最大和，不是实际的最大和
+
+只要上一位 `dp[i-1]` + 当前 `num[i]`  比 `num[i]` 大，就应该加上，如果反过来的话说明 `dp[i-1]` 一定是负数【因为正数加任何负数都比这个负数大】，只要是和为负数了就应该及时止损，用大的值替代。
+
+```js
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var maxSubArray = function (nums) {
+  let dp = []
+  dp[0] = nums[0]
+  for (let i = 1; i < nums.length; i++) {
+    dp[i] = Math.max(nums[i] + dp[i - 1], nums[i])
+  }
+  return Math.max(...dp)
+};
+```
+
+对于这种每次只用到了前一位 `dp[i-1]` 的题目，可以考虑用常数替代
+
+```js
+var maxSubArray = function (nums) {
+  let ans = nums[0]
+  let max  = nums[0]
+  for (let i = 1; i < nums.length; i++) {
+    max = Math.max(nums[i] + max, nums[i])
+    // 每次及时更新 ans 的最大值
+    ans=Math.max(ans,max)
   }
   return ans
 };
