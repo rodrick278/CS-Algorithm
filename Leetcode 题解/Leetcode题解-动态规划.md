@@ -4,32 +4,42 @@
   - [198. 打家劫舍](#198-打家劫舍)
   - [213. 打家劫舍 II](#213-打家劫舍-II)
   - [信封错排⭐](#信封错排)
+  
 - [矩阵路径](#矩阵路径)
 
   - [64. 最小路径和](#64-最小路径和)
   - [62. 不同路径](#62-不同路径)
+  
 - [数组区间](#数组区间)
 
   - [303. 区域和检索 - 数组不可变](#303-区域和检索---数组不可变)
   - [413. 等差数列划分](#413-等差数列划分)
+  
 - [分割整数](#分割整数)
 
   - [343. 整数拆分](#343-整数拆分)
   - [279. 完全平方数⭐](#279-完全平方数)
   - [91. 解码方法](#91-解码方法)
+  
 - [最长递增子序列](#最长递增子序列)
   - [300. 最长递增子序列](#300-最长递增子序列)
   - [646. 最长数对链](#646-最长数对链)
   - [376. 摆动序列⭐](#376-摆动序列)
+  
 - [最长公共子序列](#最长公共子序列)
-  - [1143. 最长公共子序列⭐](#1143-最长公共子序列)
+  
+- [1143. 最长公共子序列⭐](#1143-最长公共子序列)
+  
+- [0-1背包⭐](#0-1背包)
+
+  - [416. 分割等和子集](#416-分割等和子集)
 
 - [其他](#其他)
 
   - [53. 最大子序和](#53-最大子序和)
+
   
-  
-  
+
   
 
 # 斐波那契数列
@@ -1033,7 +1043,129 @@ var longestCommonSubsequence = function (text1, text2) {
 };
 ```
 
+# 0-1背包⭐
 
+[背包九讲 Link](https://www.kancloud.cn/kancloud/pack/70125)
+
+## [416. 分割等和子集](https://leetcode-cn.com/problems/partition-equal-subset-sum/)
+
+给定一个**只包含正整数**的**非空**数组。是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。
+
+**注意:**
+
+1. 每个数组中的元素不会超过 100
+2. 数组的大小不会超过 200
+
+**示例 1:**
+
+```
+输入: [1, 5, 11, 5]
+
+输出: true
+
+解释: 数组可以分割成 [1, 5, 5] 和 [11].
+```
+
+ 
+
+**示例 2:**
+
+```
+输入: [1, 2, 3, 5]
+
+输出: false
+
+解释: 数组不能分割成两个元素和相等的子集.
+```
+
+**题解：**
+
+**解法一：dfs**
+
+每一步都可以选择选这个数还是跳过这个数，这个是 `dfs` 分叉的关键。
+注意这里的 `memo`，用来存储已经走过的 `curSum + num` 的情况，可以减少很多的遍历，尤其是 `[1,1,1,1,1,1....]` 这种。
+
+```js
+/**
+  * @param {number[]} nums
+  * @return {boolean}
+    */
+var canPartition = function (nums) {
+  // 求和
+  const sum = nums.reduce((sum, cur) => sum + cur, 0)
+  // 奇偶判断
+  if (sum % 2 !== 0) return false
+  let target = sum / 2
+  // 如果最大值比目标大，说明其他值全加起来也比目标小
+  if (Math.max(...nums) > target) return false
+	
+  const memo = new Map()
+
+  function dfs(curSum, i) {
+    if (curSum > target || i === nums.length) return false
+
+    if (curSum === target) return true
+
+    const key = curSum + "+" + nums[i]
+    if (memo.has(key)) {
+      return memo.get(key)
+    }
+
+    const res = dfs(curSum + nums[i], i + 1) || dfs(curSum, i + 1)
+    memo.set(key, res)
+    return res
+
+  }
+
+  return dfs(0, 0)
+};
+```
+
+
+
+**解法二：动态规划**
+
+`dp[i][j]` 代表在数`[0-i]`的内,背包大小为j时，这些数用一部分能不能充满背包
+
+   * 假如我不选 `nums[i]`，那么我得依靠 `[0-(i-1)]` 这些数来填充大小为j的背包，如果他们不行那我这里也只能是 false
+   * 假如我选 `nums[i]` ,那我把这个数先塞进去
+   * 如果这个 `nums[i]==j` ,那么我直接true了
+   * 如果 `nums[i]<j` ,那么剩下的空间大小是 `j-nums[i]` ,我可用的数字是 `[0-(i-1)]` ,如果这些数字能填满剩下的空间那么我就是 true，否则不行
+   * 转换一下不就变成了 `[0-(i-1)]` 去塞 `j-nums[i]` 了
+   * 如果 `nums[i]>j` ，塞都塞不下，那么只能选择不塞，不塞怎么取值上面写了
+   * 另外第一行只有在正好塞满背包的情况下才可能 true
+
+````js
+/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var canPartition = function (nums) {
+  const sum = nums.reduce((sum, cur) => sum + cur, 0)
+  if (sum % 2 !== 0) return false
+  let target = sum / 2
+  if (Math.max(...nums) > target) return false
+
+  let dp = Array.from({ length: nums.length }, () => new Array(target + 1).fill(false))
+
+  // 由于我们下面会用到dp[i - 1]，为了防止越界，我们先把第一行填了
+  // 第一行只有一个值为true，也就是背包大小等于第一个值的时候，因为如果不是正好填充，那么也没有别的值能填了
+  dp[0][nums[0]] = true
+  for (let i = 1; i < nums.length; i++) {
+    for (let j = 0; j <= target; j++) {
+      if (nums[i] > j) { // 塞不下，就不选了
+        dp[i][j] = dp[i - 1][j]
+      } else if (nums[i] === j) { // 正好相等，直接满足
+        dp[i][j] = true
+      } else {// 可以塞，那么我可以选择不塞或者塞
+        dp[i][j] = dp[i - 1][j] || dp[i - 1][j - nums[i]]
+      }
+    }
+  }
+
+  return dp[nums.length - 1][target]
+};
+````
 
 
 
