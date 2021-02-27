@@ -33,6 +33,7 @@
 - [0-1背包⭐](#0-1背包)
 
   - [416. 分割等和子集](#416-分割等和子集)
+  - [494. 目标和](#494-目标和)
 
 - [其他](#其他)
 
@@ -1167,7 +1168,92 @@ var canPartition = function (nums) {
 };
 ````
 
+## [494. 目标和](https://leetcode-cn.com/problems/target-sum/)
 
+给定一个非负整数数组，a1, a2, ..., an, 和一个目标数，S。现在你有两个符号 `+` 和 `-`。对于数组中的任意一个整数，你都可以从 `+` 或 `-`中选择一个符号添加在前面。
+
+返回可以使最终数组和为目标数 S 的所有添加符号的方法数。
+
+**示例：**
+
+```
+输入：nums: [1, 1, 1, 1, 1], S: 3
+输出：5
+解释：
+
+-1+1+1+1+1 = 3
++1-1+1+1+1 = 3
++1+1-1+1+1 = 3
++1+1+1-1+1 = 3
++1+1+1+1-1 = 3
+
+一共有5种方法让最终目标和为3。
+```
+
+**题解：**
+
+首先先看dp数组的定义：
+
+`dp[i][j]` 定义为从数组 `nums` 中 `0-i` 的元素进行加减可以得到 ` j`  的方法数量
+
+[图片来源](https://leetcode-cn.com/problems/target-sum/solution/dong-tai-gui-hua-si-kao-quan-guo-cheng-by-keepal/)
+
+![image.png](https://pic.leetcode-cn.com/05f8151bbb0f1818723710b2455695f01c33d75a38653eeee181ab61217e8f16-image.png)
+
+- 为什么必须要正负值到 `sum` ？因为我们是需要把**上一行的、同列的、加上或减去 nums[i] 的两个数的 dp 值相加**。在第一个数 `nums[0]` 的位置 `0` 我们需要把 `1` 和 `-1` 位置相加，同理可以一直往两边延伸到边界为 `+-sum` 。这里可以获得转移方程：
+
+  `dp[i][j] = dp[i - 1][j - nums[i]] + dp[i - 1][j + nums[i]]` 
+
+-  如果数组只有一位或者没有的情况下，需要单独判断一下，因为我们循环行是从 `1` 开始。
+- 初始化第一行：在数组只有 `nums[0]` 的时候，背包大小只有 `+-nums[0]` 的时候才能**各有 1 种情况**，其他都是 0 
+- **注意** ，如果 `nums[0] == 0` 的时候，`+-nums[0]` 是同一格，那么这一格需要初始化为 2，因为 `+-0` 是一样的。
+
+```js
+/**
+ * @param {number[]} nums
+ * @param {number} S
+ * @return {number}
+ */
+var findTargetSumWays = function (nums, S) {
+	// nums 长度不足以循环时
+  if (nums.length < 2) {
+    // 考虑正负值的情况
+    if (nums[0] !== S && -nums[0] !== S) {
+      return 0
+    } else {
+      return 1
+    }
+  }
+	// 获得nums的总和
+  const sum = nums.reduce((sum, cur) => sum + cur, 0)
+  // 因为是非负整数数组，如果全部加起来还要比目标小直接返回0
+  if (sum < Math.abs(S)) return 0
+	// 初始化 dp
+  let dp = Array.from({ length: nums.length }, () => new Array(sum * 2 + 1).fill(0))
+	// 初始化第一行，考虑 0 的情况
+  if (nums[0] === 0) {
+    dp[0][sum] = 2
+  } else {
+    dp[0][sum + nums[0]] = 1
+    dp[0][sum - nums[0]] = 1
+  }
+
+
+  for (let i = 1; i < nums.length; i++) {
+    for (let j = 0; j < sum * 2 + 1; j++) {
+      // 判断边界情况
+      const l = (j - nums[i] < 0) ? 0 : dp[i - 1][j - nums[i]]
+      const r = (j + nums[i] > sum * 2) ? 0 : dp[i - 1][j + nums[i]]
+			// 转移方程
+      dp[i][j] = l + r
+			// 如果已经到达了目标位置【最后一行的 S 值】，就可以返回了，可以少循环几次
+      if (i === nums.length - 1 && j === S + sum) {
+        return dp[i][j]
+      }
+    }
+  }
+};
+```
 
 
 
