@@ -4,17 +4,13 @@
 
 ## 📐 算法与数据结构
 
-### Leetcode 题解
-
-#### 一、算法思想
-
-* [双指针](Leetcode%20题解/Leetcode题解-双指针.md)
-* [排序](Leetcode%20题解/Leetcode题解-排序.md)
-* [贪心思想](Leetcode%20题解/Leetcode题解-贪心思想.md)
-* [二分查找](Leetcode%20题解/Leetcode题解-二分查找.md)
-* [分治](Leetcode%20题解/Leetcode题解-分治.md)
-* [搜索](Leetcode%20题解/Leetcode题解-搜索.md)
-* [动态规划](Leetcode%20题解/Leetcode题解-动态规划.md)
+### [双指针](Leetcode%20题解/Leetcode题解-双指针.md)
+### [排序](Leetcode%20题解/Leetcode题解-排序.md)
+### [贪心思想](Leetcode%20题解/Leetcode题解-贪心思想.md)
+### [二分查找](Leetcode%20题解/Leetcode题解-二分查找.md)
+### [分治](Leetcode%20题解/Leetcode题解-分治.md)
+### [搜索](Leetcode%20题解/Leetcode题解-搜索.md)
+### [动态规划](Leetcode%20题解/Leetcode题解-动态规划.md)
 
 
 
