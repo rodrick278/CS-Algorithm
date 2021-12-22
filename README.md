@@ -14,3 +14,19 @@
 
 
 
+## 附录
+
+### 复杂度计算方式
+
+![image-20211222234201761](https://gitee.com/rodrick278/img/raw/master/img/image-20211222234201761.png)
+
+![image-20211222234225838](https://gitee.com/rodrick278/img/raw/master/img/image-20211222234225838.png)
+
+![image-20211222234238155](https://gitee.com/rodrick278/img/raw/master/img/image-20211222234238155.png)
+
+### 主定律
+
+[wiki](https://zh.wikipedia.org/zh-hans/%E4%B8%BB%E5%AE%9A%E7%90%86)
+
+
+![image-20211222234252258](https://gitee.com/rodrick278/img/raw/master/img/image-20211222234252258.png)
