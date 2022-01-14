@@ -19,6 +19,9 @@
 
 - [03. 数组中重复的数字](#03-数组中重复的数字)
 - [53. 在排序数组中查找数字 I](#53-在排序数组中查找数字-I)
+- [53. 0～n-1中缺失的数字](#53-0～n-1中缺失的数字)
+- [04. 二维数组中的查找](#04-二维数组中的查找)
+- [11. 旋转数组的最小数字](#11-旋转数组的最小数字)
 
 
 
@@ -571,5 +574,203 @@ var search = function(nums, target) {
 };
 ```
 
+## [53. 0～n-1中缺失的数字](https://leetcode-cn.com/problems/que-shi-de-shu-zi-lcof/)
 
+一个长度为n-1的递增排序数组中的所有数字都是唯一的，并且每个数字都在范围0～n-1之内。在范围0～n-1内的n个数字中有且只有一个数字不在该数组中，请找出这个数字。
+
+ 
+
+**示例 1:**
+
+```
+输入: [0,1,3]
+输出: 2
+```
+
+**示例 2:**
+
+```
+输入: [0,1,2,3,4,5,6,7,9]
+输出: 8
+```
+
+ 
+
+**限制：**
+
+```
+1 <= 数组长度 <= 10000
+```
+
+**题解：**
+
+排序数组的搜索问题使用二分方式
+
+```js
+// @algorithm @lc id=100331 lang=javascript
+// @title que-shi-de-shu-zi-lcof
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var missingNumber = function (nums) {
+  let [l, r] = [0, nums.length - 1];
+  // 二分 lr终归会指向同一个位置 
+  // 那个位置的值是【第一个下标错误的值】例如[0,1,3]的数字3 又或者是[1,2]的数组1
+  // 注意r可能一开始就是正确的值 比如[0,1,2] r一开始就是2 l最后会走到3
+  // 这道题的 l<=r 跳出比较巧妙 用l<r就会处理比较麻烦
+  while (l <= r) {
+    const mid = Math.floor(l + (r - l) / 2);
+    if (nums[mid] === mid) {
+      l = mid + 1;
+    } else {
+      r = mid - 1;
+    }
+  }
+  return l;
+};
+```
+
+## [04. 二维数组中的查找](https://leetcode-cn.com/problems/er-wei-shu-zu-zhong-de-cha-zhao-lcof/)
+
+在一个 n * m 的二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个高效的函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
+
+ 
+
+**示例:**
+
+现有矩阵 matrix 如下：
+
+```
+[
+  [1,   4,  7, 11, 15],
+  [2,   5,  8, 12, 19],
+  [3,   6,  9, 16, 22],
+  [10, 13, 14, 17, 24],
+  [18, 21, 23, 26, 30]
+]
+```
+
+给定 target = `5`，返回 `true`。
+
+给定 target = `20`，返回 `false`。
+
+ 
+
+**限制：**
+
+```
+0 <= n <= 1000
+0 <= m <= 1000
+```
+
+**题解：**
+
+本题关键在于需要选择从右上或者左下开始查找更方便 如果从左上的话判断很多很麻烦：
+
+<img src="https://pic.leetcode-cn.com/1642168596-vIVQKk-image.png" width=40% /><img src="https://pic.leetcode-cn.com/1642168631-oTxxgs-image.png" width=40% />
+
+
+
+```js
+// @algorithm @lc id=100276 lang=javascript
+// @title er-wei-shu-zu-zhong-de-cha-zhao-lcof
+/**
+ * @param {number[][]} matrix
+ * @param {number} target
+ * @return {boolean}
+ */
+var findNumberIn2DArray = function (matrix, target) {
+  // 左上角开始计算
+  // if (matrix.length === 0) return false;
+  // let [r, c] = [0, 0];
+
+  // while (r>=0 && r < matrix.length && c>=0 && c < matrix[0].length) {
+  //   if (matrix[r][c] === target) return true;
+  //   if (matrix[r][c] < target) {
+  //     if (matrix[r][c + 1] <= target) {
+  //       c++;
+  //     } else {
+  //       r++;
+  //     }
+  //   } else if (matrix[r][c] > target) {
+  //     c--;
+  //   }
+  // }
+  // return false;
+
+  // 右上角开始计算
+  if (matrix.length === 0) return false;
+  let [r, c] = [0, matrix[0].length - 1];
+  while(r<=matrix.length-1&&c>=0){
+    if(matrix[r][c]===target) return true
+
+    if(matrix[r][c]>target){
+      c--
+    }else{
+      r++
+    }
+  }
+  return false
+}
+```
+
+## [11. 旋转数组的最小数字](https://leetcode-cn.com/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/)
+
+把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。
+
+给你一个可能存在 **重复** 元素值的数组 `numbers` ，它原来是一个升序排列的数组，并按上述情形进行了一次旋转。请返回旋转数组的最小元素。例如，数组 `[3,4,5,1,2]` 为 `[1,2,3,4,5]` 的一次旋转，该数组的最小值为1。 
+
+**示例 1：**
+
+```
+输入：[3,4,5,1,2]
+输出：1
+```
+
+**示例 2：**
+
+```
+输入：[2,2,2,0,1]
+输出：0
+```
+
+**题解：**
+
+【难题】
+
+本题的关键在于有重复元素的处理 遇到难以通过分辨m的时候 用暴力r--的方式找到合适的值 以及m可能是最小值的情况下不能够 r=m-1
+
+```js
+// @algorithm @lc id=100278 lang=javascript
+// @title xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof
+/**
+ * @param {number[]} numbers
+ * @return {number}
+ */
+var minArray = function (numbers) {
+  let [l,r] = [0,numbers.length-1] 
+  
+  while(l<r){
+    const m = ~~(l+(r-l)/2)
+
+    if(numbers[m]<numbers[r]){
+      // [9,1,2,3]
+      // 中间值比右边小 说明m-r这段是顺序的
+      // 不能用m<l判断
+      // 为什么r=m而不是m-1？因为这个m可能是我们的目标值
+      r=m
+    }else if(numbers[m]>numbers[r]){
+      // [3,4,5,1,2]
+      // 这里是m+1 因为number[m]都比右边大了 那肯定不是最小值 所以可以排除
+      l=m+1
+    }else{
+      // 重点处理 [10,1,10,10,10] || [10,10,10,1,10] 这种 让r变小一直到碰到l 或者碰到1
+      r--
+    }
+  }
+
+  return numbers[l]
+};
+```
 
