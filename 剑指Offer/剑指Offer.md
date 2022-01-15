@@ -22,6 +22,16 @@
 - [53. 0～n-1中缺失的数字](#53-0～n-1中缺失的数字)
 - [04. 二维数组中的查找](#04-二维数组中的查找)
 - [11. 旋转数组的最小数字](#11-旋转数组的最小数字)
+- [50. 第一个只出现一次的字符](#50-第一个只出现一次的字符)
+
+**搜索和回溯**
+
+- [32. 从上到下打印二叉树1](#32-从上到下打印二叉树1)
+- [32. 从上到下打印二叉树2](#32-从上到下打印二叉树2)
+- [32. 从上到下打印二叉树3](#32-从上到下打印二叉树3)
+- [26. 树的子结构](#26-树的子结构)
+- [27. 反转二叉树](#27-反转二叉树)
+- [28. 对称的二叉树](#28-对称的二叉树)
 
 
 
@@ -771,6 +781,491 @@ var minArray = function (numbers) {
   }
 
   return numbers[l]
+};
+```
+
+## [50. 第一个只出现一次的字符](https://leetcode-cn.com/problems/di-yi-ge-zhi-chu-xian-yi-ci-de-zi-fu-lcof/)
+
+在字符串 s 中找出第一个只出现一次的字符。如果没有，返回一个单空格。 s 只包含小写字母。
+
+**示例 1:**
+
+```
+输入：s = "abaccdeff"
+输出：'b'
+```
+
+**示例 2:**
+
+```
+输入：s = "" 
+输出：' '
+```
+
+**题解**
+
+```js
+// @algorithm @lc id=100316 lang=javascript
+// @title di-yi-ge-zhi-chu-xian-yi-ci-de-zi-fu-lcof
+/**
+ * @param {string} s
+ * @return {character}
+ */
+var firstUniqChar = function (s) {
+  const map = {};
+
+  for (const char of s) {
+    if (map[char]) {
+      map[char] = map[char] + 1;
+    } else {
+      map[char] = 1;
+    }
+  }
+  for (const char in map) {
+    if (map[char] === 1) {
+      return char;
+    }
+  }
+
+  return " ";
+};
+```
+
+## [32. 从上到下打印二叉树1](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-lcof/)
+
+从上到下打印出二叉树的每个节点，同一层的节点按照从左到右的顺序打印。
+
+ 
+
+例如:
+给定二叉树: `[3,9,20,null,null,15,7]`,
+
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+返回：
+
+```
+[3,9,20,15,7]
+```
+
+**题解**
+
+```js
+// @algorithm @lc id=100311 lang=javascript
+// @title cong-shang-dao-xia-da-yin-er-cha-shu-lcof
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number[]}
+ */
+var levelOrder = function (root) {
+  if (!root) return [];
+  const res = [];
+
+  const list = [root];
+
+  while (list.length) {
+    let len = list.length;
+    while (len--) {
+      const node = list.shift();
+      res.push(node.val);
+      node.left && list.push(node.left);
+      node.right && list.push(node.right);
+    }
+  }
+  return res;
+};
+```
+
+## [32. 从上到下打印二叉树2](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-ii-lcof/)
+
+从上到下按层打印二叉树，同一层的节点按从左到右的顺序打印，每一层打印到一行。
+
+ 
+
+例如:
+给定二叉树: `[3,9,20,null,null,15,7]`,
+
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+返回其层次遍历结果：
+
+```
+[
+  [3],
+  [9,20],
+  [15,7]
+]
+```
+
+**题解**
+
+```js
+// @algorithm @lc id=100312 lang=javascript 
+// @title cong-shang-dao-xia-da-yin-er-cha-shu-ii-lcof
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number[][]}
+ */
+var levelOrder = function(root) {
+  if (!root) return [];
+  const res = [];
+
+  const list = [root];
+
+  while (list.length) {
+    let len = list.length;
+    const subarr = []
+    while (len--) {
+      const node = list.shift();
+      subarr.push(node.val);
+      node.left && list.push(node.left);
+      node.right && list.push(node.right);
+    }
+    res.push(subarr)
+  }
+  return res;
+};
+```
+
+## [32. 从上到下打印二叉树3](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-iii-lcof/)
+
+请实现一个函数按照之字形顺序打印二叉树，即第一行按照从左到右的顺序打印，第二层按照从右到左的顺序打印，第三行再按照从左到右的顺序打印，其他行以此类推。
+
+ 
+
+例如:
+给定二叉树: `[3,9,20,null,null,15,7]`,
+
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+返回其层次遍历结果：
+
+```
+[
+  [3],
+  [20,9],
+  [15,7]
+]
+```
+
+ 
+
+**提示：**
+
+1. `节点总数 <= 1000`
+
+**题解**
+
+```js
+// @algorithm @lc id=100314 lang=javascript
+// @title cong-shang-dao-xia-da-yin-er-cha-shu-iii-lcof
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number[][]}
+ */
+var levelOrder = function (root) {
+  if (!root) return [];
+  const res = [];
+  let flag = true;
+  const list = [root];
+
+  while (list.length) {
+    let len = list.length;
+    const subarr = [];
+    while (len--) {
+      const node = list.shift();
+      flag ? subarr.push(node.val) : subarr.unshift(node.val);
+      node.left && list.push(node.left);
+      node.right && list.push(node.right);
+    }
+    res.push(subarr);
+    flag = !flag;
+  }
+  return res;
+};
+```
+
+## [26. 树的子结构](https://leetcode-cn.com/problems/shu-de-zi-jie-gou-lcof/)
+
+输入两棵二叉树A和B，判断B是不是A的子结构。(约定空树不是任意一个树的子结构)
+
+B是A的子结构， 即 A中有出现和B相同的结构和节点值。
+
+例如:
+给定的树 A:
+
+```
+  3  
+ / \  
+ 4  5 
+/ \ 
+1  2
+```
+
+
+给定的树 B：
+
+```
+  4
+ /
+ 1
+```
+
+
+返回 true，因为 B 与 A 的一个子树拥有相同的结构和节点值。
+
+**示例 1：**
+
+```
+输入：A = [1,2,3], B = [3,1]
+输出：false
+```
+
+**示例 2：**
+
+```
+输入：A = [3,4,5,1,2], B = [4,1]
+输出：true
+```
+
+**限制：**
+
+```
+0 <= 节点个数 <= 10000
+```
+
+**题解**
+
+拆分的思想 sub函数用来找到头结点一致的子树才开始遍历B 否则B一直不被遍历
+
+```js
+// @algorithm @lc id=100287 lang=javascript
+// @title shu-de-zi-jie-gou-lcof
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} A
+ * @param {TreeNode} B
+ * @return {boolean}
+ */
+var isSubStructure = function (A, B) {
+  if (!A || !B) return false;
+
+  // atree是否包含btree辅助函数
+  const sub = (aTree, bTree) => {
+    // 如果把B遍历完了 那说明前面都匹配
+    if (!bTree) return true;
+
+    /**
+     * 错误情况：
+     * 1. b还有 a没了【发生在a已经遍历到最后的节点还没找到和b一样的头val】
+     * 2. ab val相同 但是后续的左子或者右子不一样
+     */
+    if (
+      aTree &&
+      aTree.val === bTree.val &&
+      sub(aTree.left, bTree.left) &&
+      sub(aTree.right, bTree.right)
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
+  // 先判断AB是不是val已经一样 如果不一样 递归A的子树 递归里面如果val还不一样还会继续走这里递归
+  return sub(A, B) || isSubStructure(A.left, B) || isSubStructure(A.right, B);
+};
+```
+
+## [27. 反转二叉树](https://leetcode-cn.com/problems/er-cha-shu-de-jing-xiang-lcof/)
+
+请完成一个函数，输入一个二叉树，该函数输出它的镜像。
+
+例如输入：
+
+`   4  /  \ 2   7 / \  / \1  3 6  9`
+镜像输出：
+
+```
+   4  /  \ 7   2 / \  / \9  6 3  1
+```
+
+ 
+
+**示例 1：**
+
+```
+输入：root = [4,2,7,1,3,6,9]
+输出：[4,7,2,9,6,3,1]
+```
+
+ 
+
+**限制：**
+
+```
+0 <= 节点个数 <= 1000
+```
+
+**题解**
+
+```js
+// @algorithm @lc id=100288 lang=javascript
+// @title er-cha-shu-de-jing-xiang-lcof
+/**
+ * Definition for a binary tree root.
+ * function Treeroot(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {Treeroot} root
+ * @return {Treeroot}
+ */
+var mirrorTree = function (root) {
+  if (!root) return root;
+
+  [root.left, root.right] = [root.right, root.left];
+  mirrorTree(root.left);
+  mirrorTree(root.right);
+
+  return root;
+};
+
+```
+
+## [28. 对称的二叉树](https://leetcode-cn.com/problems/dui-cheng-de-er-cha-shu-lcof/)
+
+请实现一个函数，用来判断一棵二叉树是不是对称的。如果一棵二叉树和它的镜像一样，那么它是对称的。
+
+例如，二叉树 [1,2,2,3,4,4,3] 是对称的。
+
+```
+   1  
+ /   \ 
+ 2    2 
+/  \ /  \
+3  4 4  3
+```
+
+
+但是下面这个 [1,2,2,null,3,null,3] 则不是镜像对称的:
+
+```
+ 1  
+/ \ 
+2  2  
+ \  \  
+  3   3
+```
+
+
+
+ 
+
+**示例 1：**
+
+```
+输入：root = [1,2,2,3,4,4,3]
+输出：true
+```
+
+**示例 2：**
+
+```
+输入：root = [1,2,2,null,3,null,3]
+输出：false
+```
+
+ 
+
+**限制：**
+
+```
+0 <= 节点个数 <= 1000
+```
+
+**题解**
+
+```js
+// @algorithm @lc id=100289 lang=javascript
+// @title dui-cheng-de-er-cha-shu-lcof
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {boolean}
+ */
+var isSymmetric = function (root) {
+  const isMirror = (a, b) => {
+    if (!a && !b) return true;
+    // a b 要么都有要么都没有
+    if (
+      a &&
+      b &&
+      a.val === b.val &&
+      isMirror(a.left, b.right) &&
+      isMirror(a.right, b.left)
+    ) {
+      return true;
+    }
+    return false;
+  };
+  // 空的也算对称
+  if (!root) return true;
+
+  return isMirror(root.left, root.right);
 };
 ```
 
