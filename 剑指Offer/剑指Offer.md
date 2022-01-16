@@ -33,6 +33,12 @@
 - [27. 反转二叉树](#27-反转二叉树)
 - [28. 对称的二叉树](#28-对称的二叉树)
 
+**排序**
+
+- [45. 把数组排成最小的数](#45-把数组排成最小的数)
+- [61. 扑克牌中的顺子](#61-扑克牌中的顺子)
+- [40. 最小的k个数](#40-最小的k个数)
+
 
 
 ## [09. 用两个栈实现队列](https://leetcode-cn.com/problems/yong-liang-ge-zhan-shi-xian-dui-lie-lcof/)
@@ -1266,6 +1272,262 @@ var isSymmetric = function (root) {
   if (!root) return true;
 
   return isMirror(root.left, root.right);
+};
+```
+
+## [45. 把数组排成最小的数](https://leetcode-cn.com/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/)
+
+输入一个非负整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。
+
+ 
+
+**示例 1:**
+
+```
+输入: [10,2]
+输出: "102"
+```
+
+**示例 2:**
+
+```
+输入: [3,30,34,5,9]
+输出: "3033459"
+```
+
+ 
+
+**提示:**
+
+- `0 < nums.length <= 100`
+
+**说明:**
+
+- 输出结果可能非常大，所以你需要返回一个字符串而不是整数
+- 拼接起来的数字可能会有前导 0，最后结果不需要去掉前导 0
+
+**题解**
+
+1. 遇到排序+数字结合字符串的问题 把数字转换成字母进行比较 `"100"<"3"`
+2. 排序时的条件是begin和i/j结合后的数字比较大小
+
+```js
+// @algorithm @lc id=100323 lang=javascript
+// @title ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof
+/**
+ * @param {number[]} nums
+ * @return {string}
+ */
+var minNumber = function (nums) {
+  // 直接sort
+  // return nums.sort((a,b)=> (''+a+b) - (''+b+a)).join('')
+  
+  // 快排
+  const strarr = nums.map((num) => "" + num);
+
+  const quickSort = (begin, end, arr) => {
+    if (begin >= end) return arr;
+    let [i, j] = [begin, end];
+
+    while (i != j) {
+      // 利用字母大小比较进行排序 ”100“<”3“ 用结合后的数字比较
+      while (i < j && arr[j] + arr[begin] >= arr[begin] + arr[j]) {
+        j--;
+      }
+      while (i < j && arr[i] + arr[begin] <= arr[begin] + arr[i]) {
+        i++;
+      }
+
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+
+    [arr[begin], arr[i]] = [arr[i], arr[begin]];
+    // i位置已经是固定的了 不要再进入排序
+    quickSort(begin, i - 1, arr);
+    quickSort(i + 1, end, arr);
+
+    return arr;
+  };
+
+  quickSort(0, strarr.length - 1, strarr);
+
+  return strarr.join("");
+};
+```
+
+## [61. 扑克牌中的顺子](https://leetcode-cn.com/problems/bu-ke-pai-zhong-de-shun-zi-lcof/)
+
+从**若干副扑克牌**中随机抽 `5` 张牌，判断是不是一个顺子，即这5张牌是不是连续的。2～10为数字本身，A为1，J为11，Q为12，K为13，而大、小王为 0 ，可以看成任意数字。A 不能视为 14。
+
+ 
+
+**示例 1:**
+
+```
+输入: [1,2,3,4,5]
+输出: True
+```
+
+ 
+
+**示例 2:**
+
+```
+输入: [0,0,1,2,5]
+输出: True
+```
+
+ 
+
+**限制：**
+
+数组长度为 5 
+
+数组的数取值为 [0, 13] .
+
+**题解**
+
+关键在于能不能想到除去0以外的数 max-min必须小于5即可
+
+```js
+// @algorithm @lc id=100341 lang=javascript
+// @title bu-ke-pai-zhong-de-shun-zi-lcof
+/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var isStraight = function (nums) {
+  // 1. 用差值计数
+  // nums = nums.sort((a, b) => a - b);
+  //   let count = 0
+  //   for(let i in nums){
+  //  // 可用来占位的0用完了
+  //     if (count < 0) return false
+  //     // 0直接继续 计数
+  //     if (nums[i] === 0) {
+  //       count++
+  //       continue
+  //     }
+
+  //     // 和前面相同 错误
+  //     if (nums[i] > 0 && nums[i] === nums[i - 1]) return false
+
+  //     if (nums[i - 1]!==0&&nums[i] - nums[i - 1] > 1) {
+  //       count -= ((nums[i] - nums[i - 1]) - 1)
+  //     }
+  //   }
+  //   return count >= 0
+
+  // 2. 根据最大数-最小数<5
+  const set = new Set();
+  // 记录最大最小值 注意这里的初始化值要超过边界值 不然永远不会变
+  let [min, max] = [Number.MAX_SAFE_INTEGER,Number.MIN_SAFE_INTEGER];
+
+  for (const item of nums) {
+    // 遇到0跳过
+    if (item === 0) continue;
+
+    // 重复值跳过
+    if (set.has(item)) return false;
+
+    // 最大最小值
+    min = Math.min(min, item);
+    max = Math.max(max, item);
+
+    set.add(item);
+  }
+
+  return max - min < 5;
+};
+```
+
+## [40. 最小的k个数](https://leetcode-cn.com/problems/zui-xiao-de-kge-shu-lcof/)
+
+输入整数数组 `arr` ，找出其中最小的 `k` 个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。
+
+ 
+
+**示例 1：**
+
+```
+输入：arr = [3,2,1], k = 2
+输出：[1,2] 或者 [2,1]
+```
+
+**示例 2：**
+
+```
+输入：arr = [0,1,2,1], k = 1
+输出：[0]
+```
+
+ 
+
+**限制：**
+
+- `0 <= k <= arr.length <= 10000`
+- `0 <= arr[i] <= 10000`
+
+**题解**
+
+```js
+// @algorithm @lc id=100301 lang=javascript
+// @title zui-xiao-de-kge-shu-lcof
+/**
+ * @param {number[]} arr
+ * @param {number} k
+ * @return {number[]}
+ */
+var getLeastNumbers = function (arr, k) {
+  // 构建堆函数 大顶堆
+  const buildheap = (arr, topIdx, len) => {
+    while (true) {
+      let maxIdx = topIdx;
+
+      const l = topIdx * 2 + 1;
+      const r = topIdx * 2 + 2;
+
+      if (l<len && arr[l] > arr[maxIdx]) {
+        maxIdx = l;
+      }
+      if (r<len && arr[r] > arr[maxIdx]) {
+        maxIdx = r;
+      }
+
+      // 如果最大值改变了
+      if (maxIdx !== topIdx) {
+        [arr[maxIdx], arr[topIdx]] = [arr[topIdx], arr[maxIdx]];
+
+        // 顶已经是最大值 但是交换下去的那个点不一样是他的三角堆的最大值 所以继续循环
+        topIdx = maxIdx;
+      } else {
+        // 因为是从最下层开始堆化 如果没变化 那说明下面的后已经大顶堆完成 直接break
+        break;
+      }
+    }
+  };
+
+  // 用来存储k个数
+  const karr = arr.slice(0, k);
+
+  // 找到最后一个非叶子节点
+  const lastleaf = ~~(karr.length / 2 - 1);
+
+  // 从这个节点开始向前遍历每一个非叶子节点进行堆化
+  for (let i = lastleaf; i >= 0; i--) {
+    buildheap(karr, i, karr.length);
+  }
+
+  // 此时karr的0已经是karr的最大值
+  for (let i = k; i < arr.length; i++) {
+    // 如果k的值比最大的小 说明karr[0]不是k个最小值里的 需要排除他再堆化
+    if (arr[i] < karr[0]) {
+      karr[0] = arr[i];
+      buildheap(karr, 0, karr.length);
+    }
+  }
+
+  return karr
 };
 ```
 
