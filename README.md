@@ -12,6 +12,8 @@
 ### [搜索](Leetcode%20题解/Leetcode题解-搜索.md)
 ### [动态规划](Leetcode%20题解/Leetcode题解-动态规划.md)
 
+### [链表](Leetcode%20题解/Leetcode题解-链表.md)
+
 ## 🤖 剑指Offer
 
 ### [Link](剑指Offer/剑指Offer.md)
