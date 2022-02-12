@@ -12,6 +12,10 @@
 
 * [7. 通过删除字母匹配到字典里最长单词](#7-通过删除字母匹配到字典里最长单词)
 
+* [8. 盛最多水的容器](#8-盛最多水的容器)
+
+* [9. 三数之和](#9-三数之和)
+
   
 
 # 双指针 Two Pointers
@@ -540,6 +544,169 @@ var findLongestWord = function (s, d) {
   }
 
   return result
+};
+```
+
+## 8. 盛最多水的容器
+
+[11. 盛最多水的容器](https://leetcode-cn.com/problems/container-with-most-water/)
+
+
+
+给你 `n` 个非负整数 `a1，a2，...，a``n`，每个数代表坐标中的一个点 `(i, ai)` 。在坐标内画 `n` 条垂直线，垂直线 `i` 的两个端点分别为 `(i, ai)` 和 `(i, 0)` 。找出其中的两条线，使得它们与 `x` 轴共同构成的容器可以容纳最多的水。
+
+**说明：**你不能倾斜容器。
+
+ 
+
+**示例 1：**
+
+![img](https://aliyun-lc-upload.oss-cn-hangzhou.aliyuncs.com/aliyun-lc-upload/uploads/2018/07/25/question_11.jpg)
+
+```
+输入：[1,8,6,2,5,4,8,3,7]
+输出：49 
+解释：图中垂直线代表输入数组 [1,8,6,2,5,4,8,3,7]。在此情况下，容器能够容纳水（表示为蓝色部分）的最大值为 49。
+```
+
+**示例 2：**
+
+```
+输入：height = [1,1]
+输出：1
+```
+
+**示例 3：**
+
+```
+输入：height = [4,3,2,1,4]
+输出：16
+```
+
+**示例 4：**
+
+```
+输入：height = [1,2,1]
+输出：2
+```
+
+ 
+
+**提示：**
+
+- `n == height.length`
+- `2 <= n <= 105`
+- `0 <= height[i] <= 104`
+
+
+
+```js
+/**
+ * @param {number[]} height
+ * @return {number}
+ */
+var maxArea = function (height) {
+  /**
+   * 双指针左右收拢
+   * 哪边短收哪边
+   * 如果改变的那边比原来更短 直接跳过不算面积
+   * 否则正常取max值
+   */
+  let [l, r] = [0, height.length - 1];
+  let res = (r - l) * Math.min(height[l], height[r]);
+
+  while (l < r) {
+    if (height[l] < height[r]) {
+      // 左边短
+      l++;
+      if (height[l] <= height[l - 1]) continue;
+    } else {
+      r--;
+      if (height[r] <= height[r + 1]) continue;
+    }
+
+    res = Math.max(res, (r - l) * Math.min(height[l], height[r]));
+  }
+
+  return res
+};
+```
+
+## [9. 三数之和](https://leetcode-cn.com/problems/3sum/)
+
+给你一个包含 `n` 个整数的数组 `nums`，判断 `nums` 中是否存在三个元素 *a，b，c ，*使得 *a + b + c =* 0 ？请你找出所有和为 `0` 且不重复的三元组。
+
+**注意：**答案中不可以包含重复的三元组。
+
+ 
+
+**示例 1：**
+
+```
+输入：nums = [-1,0,1,2,-1,-4]
+输出：[[-1,-1,2],[-1,0,1]]
+```
+
+**示例 2：**
+
+```
+输入：nums = []
+输出：[]
+```
+
+**示例 3：**
+
+```
+输入：nums = [0]
+输出：[]
+```
+
+ 
+
+**提示：**
+
+- `0 <= nums.length <= 3000`
+- `-105 <= nums[i] <= 105`
+
+```js
+/**
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+var threeSum = function (nums) {
+  /**
+   * 先排序 固定一个值i（从第一个开始
+   * 如果这个值i比0大了 结束计算输出答案（因为这个值只会越来越大）
+   * 两个指针指向他后面的数组的开始和结束
+   * 三个数加起来 大于0 r-- 小于0 l++ 等于0 保存
+   * 一轮循环结束后 i++ 如果和前面一个数一样 pass 因为结果一样（lr也要去重）
+   */
+  if (nums.length < 3) return [];
+  nums = nums.sort((a,b)=>a-b);
+  const res = [];
+  let i = 0;
+  while (i <= nums.length - 3 && nums[i] <= 0) {
+    let [l, r] = [i + 1, nums.length - 1];
+    while (l < r) {
+      if (nums[i] + nums[l] + nums[r] > 0) {
+        r--;
+      } else if (nums[i] + nums[l] + nums[r] < 0) {
+        l++;
+      } else {
+        res.push([nums[i], nums[l], nums[r]]);
+        // 下面两个while针对 [-2,0,0,2,2] 这种情况去重
+        while (l < r && nums[l] === nums[l + 1]) l++;
+        while (l < r && nums[r] === nums[r - 1]) r--;
+        r--;
+        l++;
+      }
+    }
+    // 去重
+    while (i <= nums.length - 3 && nums[i] <= 0 && nums[i] === nums[i + 1]) i++;
+    i++;
+  }
+
+  return res;
 };
 ```
 

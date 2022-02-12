@@ -1,4 +1,6 @@
 - [02. 两数相加](#02-两数相加)
+- [19. 删除链表的倒数第N个结点](#19-删除链表的倒数第N个结点)
+- [206. 反转链表](#206-反转链表)
 
 
 
@@ -83,5 +85,155 @@ var addTwoNumbers = function (l1, l2) {
   return res.next;
 };
 
+```
+
+## [19. 删除链表的倒数第N个结点](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)
+
+给你一个链表，删除链表的倒数第 `n` 个结点，并且返回链表的头结点。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2020/10/03/remove_ex1.jpg)
+
+```
+输入：head = [1,2,3,4,5], n = 2
+输出：[1,2,3,5]
+```
+
+**示例 2：**
+
+```
+输入：head = [1], n = 1
+输出：[]
+```
+
+**示例 3：**
+
+```
+输入：head = [1,2], n = 1
+输出：[1]
+```
+
+ 
+
+**提示：**
+
+- 链表中结点的数目为 `sz`
+- `1 <= sz <= 30`
+- `0 <= Node.val <= 100`
+- `1 <= n <= sz`
+
+```js
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @param {number} n
+ * @return {ListNode}
+ */
+var removeNthFromEnd = function (head, n) {
+  /**
+   * 快慢指针
+   * 1. 搞一个虚拟头节点 指向head（方便删除头结点的情况
+   * 2. 快指针先走n+1步
+   * 3. 此时如果已经为null 那么直接删除头（因为题目n必然有效）
+   * 4. 指针同时一步步走 快指针为null时 慢指针的val就是要删除的
+   */
+  const dummyHead = new ListNode(0,head);
+
+  let [slow, fast] = [dummyHead, dummyHead];
+
+  // 快指针走n+1
+  let step = n+1
+  while(step--){
+    if(!fast){
+      // fast如果已经没了 直接去掉头结点
+      return head.next
+    }
+    fast = fast.next
+  }
+
+  while(fast){
+    slow = slow.next
+    fast = fast.next
+  }
+  slow.next = slow.next.next
+  return dummyHead.next
+  
+};
+```
+
+## [206. 反转链表](https://leetcode-cn.com/problems/reverse-linked-list/)
+
+给你单链表的头节点 `head` ，请你反转链表，并返回反转后的链表。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2021/02/19/rev1ex1.jpg)
+
+```
+输入：head = [1,2,3,4,5]
+输出：[5,4,3,2,1]
+```
+
+**示例 2：**
+
+![img](https://assets.leetcode.com/uploads/2021/02/19/rev1ex2.jpg)
+
+```
+输入：head = [1,2]
+输出：[2,1]
+```
+
+**示例 3：**
+
+```
+输入：head = []
+输出：[]
+```
+
+ 
+
+**提示：**
+
+- 链表中节点的数目范围是 `[0, 5000]`
+- `-5000 <= Node.val <= 5000`
+
+```js
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var reverseList = function (head) {
+  let prev = null
+
+  while (head) {
+    // 234
+    const next = head.next
+    // 1null
+    head.next = prev
+    prev = head
+
+    head = next
+  }
+
+  return prev
+};
 ```
 
