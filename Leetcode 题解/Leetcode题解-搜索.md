@@ -24,6 +24,7 @@
   - [131. 分割回文串](#131-分割回文串)
   - [37. 解数独](#37-解数独)
   - [51. N 皇后](#51-N-皇后)
+  - [22. 括号生成](#22-括号生成)
 
 # BFS⭐
 
@@ -1754,6 +1755,61 @@ var solveNQueens = function (n) {
   }
   fill(0)
   return ans
+};
+```
+
+## [22. 括号生成](https://leetcode-cn.com/problems/generate-parentheses/description/)
+
+数字 `n` 代表生成括号的对数，请你设计一个函数，用于能够生成所有可能的并且 **有效的** 括号组合。
+
+ 
+
+**示例 1：**
+
+```
+输入：n = 3
+输出：["((()))","(()())","(())()","()(())","()()()"]
+```
+
+**示例 2：**
+
+```
+输入：n = 1
+输出：["()"]
+```
+
+```js
+/**
+ * @param {number} n
+ * @return {string[]}
+ */
+var generateParenthesis = function (n) {
+  /**
+   * 假设n=2
+   * 什么时候可以选r？在r>l的时候 比如 （ 或者没l的时候
+   * 相等的时候不能选r 原来是（） 再选r就变成（））
+   * 字符串总长度n*2时候 结束
+   */
+
+  const res = [];
+
+  const dfs = (l, r, str) => {
+    if (str.length === n * 2) {
+      res.push(str);
+      return;
+    }
+    if (r > l) {
+      // l只要不为0 还能选
+      if (l !== 0) dfs(l - 1, r, str + "(");
+      // 选r
+      dfs(l, r - 1, str + ")");
+    } else {
+      dfs(l - 1, r, str + "(");
+    }
+  };
+
+  dfs(n, n, "");
+  return res;
 };
 ```
 

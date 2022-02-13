@@ -1,6 +1,7 @@
 - [02. 两数相加](#02-两数相加)
 - [19. 删除链表的倒数第N个结点](#19-删除链表的倒数第N个结点)
 - [206. 反转链表](#206-反转链表)
+- [21. 合并两个有序链表](#21-合并两个有序链表)
 
 
 
@@ -234,6 +235,68 @@ var reverseList = function (head) {
   }
 
   return prev
+};
+```
+
+## [21. 合并两个有序链表](https://leetcode-cn.com/problems/merge-two-sorted-lists/description/)
+
+将两个升序链表合并为一个新的 **升序** 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2020/10/03/merge_ex1.jpg)
+
+```
+输入：l1 = [1,2,4], l2 = [1,3,4]
+输出：[1,1,2,3,4,4]
+```
+
+**示例 2：**
+
+```
+输入：l1 = [], l2 = []
+输出：[]
+```
+
+**示例 3：**
+
+```
+输入：l1 = [], l2 = [0]
+输出：[0]
+```
+
+```js
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} list1
+ * @param {ListNode} list2
+ * @return {ListNode}
+ */
+var mergeTwoLists = function (list1, list2) {
+  /**
+   * 两个指针
+   * 如果节点值一样 分别填入
+   * 不一样填入小的 向后一位 直到所有的都结束
+   * 递归
+   */
+  if(!list1) return list2
+  if(!list2) return list1
+
+  if(list1.val<list2.val){
+    list1.next = mergeTwoLists(list1.next,list2)
+    return list1
+  }else{
+    list2.next = mergeTwoLists(list2.next,list1)
+    return list2
+  }
 };
 ```
 

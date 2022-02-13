@@ -5,6 +5,7 @@
 - [278. 第一个错误的版本](#278-第一个错误的版本)
 - [153. 寻找旋转排序数组中的最小值⭐](#153-寻找旋转排序数组中的最小值)
 - [34. 在排序数组中查找元素的第一个和最后一个位置⭐](#34-在排序数组中查找元素的第一个和最后一个位置)
+- [33. 搜索旋转排序数组](#33-搜索旋转排序数组)
 
 # 二分查找
 
@@ -462,6 +463,83 @@ var searchRange = function(nums, target) {
         ans = [leftIdx, rightIdx];
     } 
     return ans;
+};
+```
+
+## [33. 搜索旋转排序数组](https://leetcode-cn.com/problems/search-in-rotated-sorted-array/description/)
+
+整数数组 `nums` 按升序排列，数组中的值 **互不相同** 。
+
+在传递给函数之前，`nums` 在预先未知的某个下标 `k`（`0 <= k < nums.length`）上进行了 **旋转**，使数组变为 `[nums[k], nums[k+1], ..., nums[n-1], nums[0], nums[1], ..., nums[k-1]]`（下标 **从 0 开始** 计数）。例如， `[0,1,2,4,5,6,7]` 在下标 `3` 处经旋转后可能变为 `[4,5,6,7,0,1,2]` 。
+
+给你 **旋转后** 的数组 `nums` 和一个整数 `target` ，如果 `nums` 中存在这个目标值 `target` ，则返回它的下标，否则返回 `-1` 。
+
+ 
+
+**示例 1：**
+
+```
+输入：nums = [4,5,6,7,0,1,2], target = 0
+输出：4
+```
+
+**示例 2：**
+
+```
+输入：nums = [4,5,6,7,0,1,2], target = 3
+输出：-1
+```
+
+**示例 3：**
+
+```
+输入：nums = [1], target = 0
+输出：-1
+```
+
+```js
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+var search = function (nums, target) {
+  /**
+   * 二分
+   * 取中间值位置i
+   * 判断哪边是有序的
+   * 比如 [4,5,6,7,0,1,2]
+   * 中间是7 4<=7 所以左边有序 这里注意 不要用4和6比 因为类似于 [3,1] 这种 用mid-1会错
+   * 二分减半条件：如果有序的那边不包含target 那么搜索无序的
+   */
+  let [start, end, mid] = [
+    0,
+    nums.length - 1,
+    Math.floor((nums.length - 1) / 2),
+  ];
+  while (start <= end) {
+    mid = start + ((end - start) >> 1);
+    if (target === nums[mid]) return mid;
+    // 左侧有序
+    if (nums[start] <= nums[mid]) {
+      // 在左边这段有序的内部
+      if (target >= nums[start] && target < nums[mid]) {
+        // 说明在左侧
+        end = mid - 1;
+      } else {
+        start = mid + 1;
+      }
+    } else {
+      // 右侧有序
+      if (target > nums[mid] && target <= nums[end]) {
+        // 说明在右侧
+        start = mid + 1;
+      } else {
+        end = mid - 1;
+      }
+    }
+  }
+  return -1;
 };
 ```
 
