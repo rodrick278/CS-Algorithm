@@ -1,51 +1,12 @@
-**栈与队列**
-
-- [09. 用两个栈实现队列](#09-用两个栈实现队列)
-
-- [30. 包含min函数的栈](#30-包含min函数的栈)
-
-**链表**
-
-- [06. 从尾到头打印链表](#06-从尾到头打印链表)
-- [24. 反转链表](#24-反转链表)
-- [35. 复杂链表的复制](#35-复杂链表的复制)
-
-**字符串**
-
-- [05. 替换空格](#05-替换空格)
-- [58. 左旋转字符串](#58-左旋转字符串)
-
-**查找**
-
-- [03. 数组中重复的数字](#03-数组中重复的数字)
-- [53. 在排序数组中查找数字 I](#53-在排序数组中查找数字-I)
-- [53. 0～n-1中缺失的数字](#53-0～n-1中缺失的数字)
-- [04. 二维数组中的查找](#04-二维数组中的查找)
-- [11. 旋转数组的最小数字](#11-旋转数组的最小数字)
-- [50. 第一个只出现一次的字符](#50-第一个只出现一次的字符)
-
-**搜索和回溯**
-
-- [32. 从上到下打印二叉树1](#32-从上到下打印二叉树1)
-- [32. 从上到下打印二叉树2](#32-从上到下打印二叉树2)
-- [32. 从上到下打印二叉树3](#32-从上到下打印二叉树3)
-- [26. 树的子结构](#26-树的子结构)
-- [27. 反转二叉树](#27-反转二叉树)
-- [28. 对称的二叉树](#28-对称的二叉树)
-
-**排序**
-
-- [45. 把数组排成最小的数](#45-把数组排成最小的数)
-- [61. 扑克牌中的顺子](#61-扑克牌中的顺子)
-- [40. 最小的k个数](#40-最小的k个数)
-
-**动态规划**
-
-- [10. 斐波那契数列](#10-斐波那契数列)
+---
+sidebarDepth: 2
+---
 
 
 
-## [09. 用两个栈实现队列](https://leetcode-cn.com/problems/yong-liang-ge-zhan-shi-xian-dui-lie-lcof/)
+
+## 栈与队列
+### [09. 用两个栈实现队列](https://leetcode-cn.com/problems/yong-liang-ge-zhan-shi-xian-dui-lie-lcof/)
 
 用两个栈实现一个队列。队列的声明如下，请实现它的两个函数 `appendTail` 和 `deleteHead` ，分别完成在队列尾部插入整数和在队列头部删除整数的功能。(若队列中没有元素，`deleteHead` 操作返回 -1 )
 
@@ -122,7 +83,7 @@ CQueue.prototype.deleteHead = function () {
  */
 ```
 
-## [30. 包含min函数的栈](https://leetcode-cn.com/problems/bao-han-minhan-shu-de-zhan-lcof/)
+### [30. 包含min函数的栈](https://leetcode-cn.com/problems/bao-han-minhan-shu-de-zhan-lcof/)
 
 定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的 min 函数在该栈中，调用 min、push 及 pop 的时间复杂度都是 O(1)。
 
@@ -212,7 +173,9 @@ MinStack.prototype.min = function () {
  */
 ```
 
-## [06. 从尾到头打印链表](https://leetcode-cn.com/problems/cong-wei-dao-tou-da-yin-lian-biao-lcof/)
+
+## 链表
+### [06. 从尾到头打印链表](https://leetcode-cn.com/problems/cong-wei-dao-tou-da-yin-lian-biao-lcof/)
 
 输入一个链表的头节点，从尾到头反过来返回每个节点的值（用数组返回）。
 
@@ -272,7 +235,7 @@ var reversePrint1 = function(head,arr = []) {
 };
 ```
 
-## [24. 反转链表](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
+### [24. 反转链表](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
 
 定义一个函数，输入一个链表的头节点，反转该链表并输出反转后链表的头节点。
 
@@ -330,7 +293,7 @@ var reverseList = function(head) {
 };
 ```
 
-## [35. 复杂链表的复制](https://leetcode-cn.com/problems/fu-za-lian-biao-de-fu-zhi-lcof/)
+### [35. 复杂链表的复制](https://leetcode-cn.com/problems/fu-za-lian-biao-de-fu-zhi-lcof/)
 
 请实现 `copyRandomList` 函数，复制一个复杂链表。在复杂链表中，每个节点除了有一个 `next` 指针指向下一个节点，还有一个 `random` 指针指向链表中的任意节点或者 `null`。
 
@@ -420,8 +383,8 @@ var copyRandomList = function(head) {
   return map.get(head)
 };
 ```
-
-## [05. 替换空格](https://leetcode-cn.com/problems/ti-huan-kong-ge-lcof/)
+## 字符串
+### [05. 替换空格](https://leetcode-cn.com/problems/ti-huan-kong-ge-lcof/)
 
 请实现一个函数，把字符串 `s` 中的每个空格替换成"%20"。
 
@@ -464,7 +427,7 @@ var replaceSpace = function(s) {
 };
 ```
 
-## [58. 左旋转字符串](https://leetcode-cn.com/problems/zuo-xuan-zhuan-zi-fu-chuan-lcof/)
+### [58. 左旋转字符串](https://leetcode-cn.com/problems/zuo-xuan-zhuan-zi-fu-chuan-lcof/)
 
 字符串的左旋转操作是把字符串前面的若干个字符转移到字符串的尾部。请定义一个函数实现字符串左旋转操作的功能。比如，输入字符串"abcdefg"和数字2，该函数将返回左旋转两位得到的结果"cdefgab"。
 
@@ -490,7 +453,10 @@ var replaceSpace = function(s) {
 
 - `1 <= k < s.length <= 10000`
 
-## [03. 数组中重复的数字](https://leetcode-cn.com/problems/shu-zu-zhong-zhong-fu-de-shu-zi-lcof/)
+
+## 查找
+
+### [03. 数组中重复的数字](https://leetcode-cn.com/problems/shu-zu-zhong-zhong-fu-de-shu-zi-lcof/)
 
 找出数组中重复的数字。
 
@@ -532,7 +498,7 @@ var findRepeatNumber = function(nums) {
 };
 ```
 
-## [53. 在排序数组中查找数字 I](https://leetcode-cn.com/problems/zai-pai-xu-shu-zu-zhong-cha-zhao-shu-zi-lcof/)
+### [53. 在排序数组中查找数字 I](https://leetcode-cn.com/problems/zai-pai-xu-shu-zu-zhong-cha-zhao-shu-zi-lcof/)
 
 统计一个数字在排序数组中出现的次数。
 
@@ -594,7 +560,7 @@ var search = function(nums, target) {
 };
 ```
 
-## [53. 0～n-1中缺失的数字](https://leetcode-cn.com/problems/que-shi-de-shu-zi-lcof/)
+### [53. 0～n-1中缺失的数字](https://leetcode-cn.com/problems/que-shi-de-shu-zi-lcof/)
 
 一个长度为n-1的递增排序数组中的所有数字都是唯一的，并且每个数字都在范围0～n-1之内。在范围0～n-1内的n个数字中有且只有一个数字不在该数组中，请找出这个数字。
 
@@ -651,7 +617,7 @@ var missingNumber = function (nums) {
 };
 ```
 
-## [04. 二维数组中的查找](https://leetcode-cn.com/problems/er-wei-shu-zu-zhong-de-cha-zhao-lcof/)
+### [04. 二维数组中的查找](https://leetcode-cn.com/problems/er-wei-shu-zu-zhong-de-cha-zhao-lcof/)
 
 在一个 n * m 的二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个高效的函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
 
@@ -735,7 +701,7 @@ var findNumberIn2DArray = function (matrix, target) {
 }
 ```
 
-## [11. 旋转数组的最小数字](https://leetcode-cn.com/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/)
+### [11. 旋转数组的最小数字](https://leetcode-cn.com/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/)
 
 把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。
 
@@ -794,7 +760,7 @@ var minArray = function (numbers) {
 };
 ```
 
-## [50. 第一个只出现一次的字符](https://leetcode-cn.com/problems/di-yi-ge-zhi-chu-xian-yi-ci-de-zi-fu-lcof/)
+### [50. 第一个只出现一次的字符](https://leetcode-cn.com/problems/di-yi-ge-zhi-chu-xian-yi-ci-de-zi-fu-lcof/)
 
 在字符串 s 中找出第一个只出现一次的字符。如果没有，返回一个单空格。 s 只包含小写字母。
 
@@ -841,7 +807,9 @@ var firstUniqChar = function (s) {
 };
 ```
 
-## [32. 从上到下打印二叉树1](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-lcof/)
+## 搜索和回溯
+
+### [32. 从上到下打印二叉树1](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-lcof/)
 
 从上到下打印出二叉树的每个节点，同一层的节点按照从左到右的顺序打印。
 
@@ -899,7 +867,7 @@ var levelOrder = function (root) {
 };
 ```
 
-## [32. 从上到下打印二叉树2](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-ii-lcof/)
+### [32. 从上到下打印二叉树2](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-ii-lcof/)
 
 从上到下按层打印二叉树，同一层的节点按从左到右的顺序打印，每一层打印到一行。
 
@@ -963,7 +931,7 @@ var levelOrder = function(root) {
 };
 ```
 
-## [32. 从上到下打印二叉树3](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-iii-lcof/)
+### [32. 从上到下打印二叉树3](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-iii-lcof/)
 
 请实现一个函数按照之字形顺序打印二叉树，即第一行按照从左到右的顺序打印，第二层按照从右到左的顺序打印，第三行再按照从左到右的顺序打印，其他行以此类推。
 
@@ -1034,7 +1002,7 @@ var levelOrder = function (root) {
 };
 ```
 
-## [26. 树的子结构](https://leetcode-cn.com/problems/shu-de-zi-jie-gou-lcof/)
+### [26. 树的子结构](https://leetcode-cn.com/problems/shu-de-zi-jie-gou-lcof/)
 
 输入两棵二叉树A和B，判断B是不是A的子结构。(约定空树不是任意一个树的子结构)
 
@@ -1132,7 +1100,7 @@ var isSubStructure = function (A, B) {
 };
 ```
 
-## [27. 反转二叉树](https://leetcode-cn.com/problems/er-cha-shu-de-jing-xiang-lcof/)
+### [27. 反转二叉树](https://leetcode-cn.com/problems/er-cha-shu-de-jing-xiang-lcof/)
 
 请完成一个函数，输入一个二叉树，该函数输出它的镜像。
 
@@ -1190,7 +1158,7 @@ var mirrorTree = function (root) {
 
 ```
 
-## [28. 对称的二叉树](https://leetcode-cn.com/problems/dui-cheng-de-er-cha-shu-lcof/)
+### [28. 对称的二叉树](https://leetcode-cn.com/problems/dui-cheng-de-er-cha-shu-lcof/)
 
 请实现一个函数，用来判断一棵二叉树是不是对称的。如果一棵二叉树和它的镜像一样，那么它是对称的。
 
@@ -1279,7 +1247,9 @@ var isSymmetric = function (root) {
 };
 ```
 
-## [45. 把数组排成最小的数](https://leetcode-cn.com/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/)
+## 排序
+
+### [45. 把数组排成最小的数](https://leetcode-cn.com/problems/ba-shu-zu-pai-cheng-zui-xiao-de-shu-lcof/)
 
 输入一个非负整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。
 
@@ -1359,7 +1329,7 @@ var minNumber = function (nums) {
 };
 ```
 
-## [61. 扑克牌中的顺子](https://leetcode-cn.com/problems/bu-ke-pai-zhong-de-shun-zi-lcof/)
+### [61. 扑克牌中的顺子](https://leetcode-cn.com/problems/bu-ke-pai-zhong-de-shun-zi-lcof/)
 
 从**若干副扑克牌**中随机抽 `5` 张牌，判断是不是一个顺子，即这5张牌是不是连续的。2～10为数字本身，A为1，J为11，Q为12，K为13，而大、小王为 0 ，可以看成任意数字。A 不能视为 14。
 
@@ -1445,7 +1415,7 @@ var isStraight = function (nums) {
 };
 ```
 
-## [40. 最小的k个数](https://leetcode-cn.com/problems/zui-xiao-de-kge-shu-lcof/)
+### [40. 最小的k个数](https://leetcode-cn.com/problems/zui-xiao-de-kge-shu-lcof/)
 
 输入整数数组 `arr` ，找出其中最小的 `k` 个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。
 
@@ -1535,7 +1505,9 @@ var getLeastNumbers = function (arr, k) {
 };
 ```
 
-## [10. 斐波那契数列](https://leetcode-cn.com/problems/fei-bo-na-qi-shu-lie-lcof/solution/)
+## 动态规划
+
+### [10. 斐波那契数列](https://leetcode-cn.com/problems/fei-bo-na-qi-shu-lie-lcof/solution/)
 
 写一个函数，输入 `n` ，求斐波那契（Fibonacci）数列的第 `n` 项（即 `F(N)`）。斐波那契数列的定义如下：
 
