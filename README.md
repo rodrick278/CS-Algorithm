@@ -1,6 +1,6 @@
 # 关于本书
 
-<img :src="$withBase('/cover.jfif')" alt="cover" width="50%"/>
+<img src="./docs/.vuepress/public/cover.jfif" alt="cover" width="50%"/>
 
 ✅ 一本记录学习算法过程的小书
 
