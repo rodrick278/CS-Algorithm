@@ -1,4 +1,4 @@
-name: A TO A:GH_PAGES
+name: Build and Deploy
 on: [push]
 jobs:
   build-and-deploy:
@@ -7,12 +7,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@master
 
-    - name: Build and Deploy
+    - name: vuepress-deploy
       uses: jenkey2011/vuepress-deploy@master
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         TARGET_REPO: rodrick278/CS-Algorithm
-        TARGET_BRANCH: gh_pages
+        TARGET_BRANCH: gh-pages
         BUILD_SCRIPT: yarn && yarn docs:build
         BUILD_DIR: docs/.vuepress/dist
         CNAME: https://rodrick.cn/CS-Algorithm/
