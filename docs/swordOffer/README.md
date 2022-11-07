@@ -1570,3 +1570,65 @@ var fib = function (n) {
 };
 ```
 
+
+## 分治
+### [07. 重建二叉树](https://leetcode.cn/problems/zhong-jian-er-cha-shu-lcof/)
+
+输入某二叉树的前序遍历和中序遍历的结果，请构建该二叉树并返回其根节点。
+
+假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
+
+**示例：**
+
+```
+Input: preorder = [3,9,20,15,7], inorder = [9,3,15,20,7]
+Output: [3,9,20,null,null,15,7]
+
+![img](https://assets.leetcode.com/uploads/2021/02/19/tree.jpg)
+```
+
+**题解**
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {number[]} preorder
+ * @param {number[]} inorder
+ * @return {TreeNode}
+ */
+var buildTree = function (preorder, inorder) {
+    /**
+        1. 根节点在中序的index肯定能分割出左右树分别的中序
+        2. 这个index在前序中的位置一定是当前整个左树的前序遍历结束
+     */
+    if (!preorder.length) return null
+    // 以根新建一个树节点
+    let node = new TreeNode(preorder[0])
+
+    // 在中序中找到关键下标
+    const index = inorder.indexOf(preorder[0])
+
+    // 左树中序
+    const leftinorder = inorder.slice(0, index)
+    // 右树中序
+    const rightinorder = inorder.slice(index + 1)
+
+    // 左树前序
+    const leftpreorder = preorder.slice(1, index + 1)
+    // 右树前序
+    const rightpreorder = preorder.slice(index + 1)
+
+    const leftNode = buildTree(leftpreorder, leftinorder)
+    const rightNode = buildTree(rightpreorder, rightinorder)
+
+    node.left = leftNode
+    node.right = rightNode
+
+    return node
+};
+```
