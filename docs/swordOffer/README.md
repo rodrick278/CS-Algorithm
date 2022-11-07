@@ -1,5 +1,8 @@
 ---
 sidebarDepth: 2
+meta:
+  - name: referrer
+    content: no-referrer
 ---
 
 
