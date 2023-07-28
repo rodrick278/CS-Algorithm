@@ -49,6 +49,7 @@ module.exports = {
           "/leetcode/双指针.md",
           "/leetcode/搜索.md",
           "/leetcode/贪心思想.md",
+          "/leetcode/特殊.md",
         ],
       },{
         title: "剑指offer",
